@@ -1,16 +1,52 @@
-import requests
-import xml.etree.ElementTree as ET
+####
+# This script contains functions that demonstrate how to publish
+# a workbook using the Tableau Server REST API. It will publish a
+# specified workbook to the 'default' project of a given server.
+#
+# To run the script, you must have installed Python 2.7.9 or later,
+# plus the 'requests' library:
+#   http://docs.python-requests.org/en/latest/
+#
+# The script takes in the server address and username as arguments,
+# where the server address has no trailing slash (e.g. http://localhost).
+# Run the script in terminal by entering:
+#   python publish_sample.py <server_address> <username>
+#
+# When running the script, it will prompt for the following:
+# 'Workbook file to publish': Enter file path to the desired workbook file
+#                             to publish (either a .twb or .twbx file).
+# 'Password':                 Enter password for the user to log in as.
+####
+
+import requests # Contains methods used to make HTTP requests
+import xml.etree.ElementTree as ET # Contains methods used to build and parse XML
 import sys
 import os
 import math
 import getpass
 
+# The following packages are used to build a multi-part/mixed request.
+# They are contained in the 'requests' library
 from requests.packages.urllib3.fields import RequestField
 from requests.packages.urllib3.filepost import encode_multipart_formdata
 
+# The namespace for the REST API is 'http://tableausoftware.com/api' for Tableau Server 9.0
+# or 'http://tableau.com/api' for Tableau Server 9.1 or later
 xmlns = {'t': 'http://tableau.com/api'}
+
+# The maximum size of a file that can be published in a single request is 64MB
 FILESIZE_LIMIT = 1024 * 1024 * 64   # 64MB
+
+# For when a workbook is over 64MB, break it into 5MB(standard chunk size) chunks
 CHUNK_SIZE = 1024 * 1024 * 5    # 5MB
+
+
+class ApiCallError(Exception):
+    pass
+
+
+class UserDefinedFieldError(Exception):
+    pass
 
 
 def _encode_for_display(text):
@@ -54,25 +90,33 @@ def _check_status(server_response, success_code):
     'success_code'          the expected success code for the response
     """
     if server_response.status_code != success_code:
-        print(_encode_for_display(server_response.text))
-        sys.exit(1)
+        parsed_response = ET.fromstring(server_response.text)
+        code = parsed_response.find('t:error', namespaces=xmlns).attrib.get('code')
+        summary = parsed_response.find('.//t:summary', namespaces=xmlns).text
+        detail = parsed_response.find('.//t:detail', namespaces=xmlns).text
+        error_message = '\n\n{0}: {1}\n\t{2}'.format(code, summary, detail)
+        raise ApiCallError(error_message)
     return
 
-def sign_in(site=""):
-    """
-    Signs in to the server specified in the global SERVER variable with
-    credentials specified in the global USER and PASSWORD variables.
 
+def sign_in(server, username, password, site=""):
+    """
+    Signs in to the server specified with the given credentials
+
+    'server'   specified server address
+    'username' is the name (not ID) of the user to sign in as.
+               Note that most of the functions in this example require that the user
+               have server administrator permissions.
+    'password' is the password for the user.
     'site'     is the ID (as a string) of the site on the server to sign in to. The
                default is "", which signs in to the default site.
-
-    Returns the authentication token and site ID.
+    Returns the authentication token and the site ID.
     """
-    url = SERVER + "/api/2.3/auth/signin"
+    url = server + "/api/2.3/auth/signin"
 
     # Builds the request
     xml_request = ET.Element('tsRequest')
-    credentials_element = ET.SubElement(xml_request, 'credentials', name=USER, password=PASSWORD)
+    credentials_element = ET.SubElement(xml_request, 'credentials', name=username, password=password)
     ET.SubElement(credentials_element, 'site', contentUrl=site)
     xml_request = ET.tostring(xml_request)
 
@@ -92,45 +136,49 @@ def sign_in(site=""):
     return token, site_id
 
 
-def sign_out():
+def sign_out(server, auth_token):
     """
     Destroys the active session and invalidates authentication token.
 
-    'token'     is the authentication token for the signed in user
-                that has been created on sign in.
+    'server'        specified server address
+    'auth_token'    authentication token that grants user access to API calls
     """
-    url = SERVER + "/api/2.3/auth/signout"
-    server_response = requests.post(url, headers={'x-tableau-auth': AUTH_TOKEN})
+    url = server + "/api/2.3/auth/signout"
+    server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 204)
     return
 
 
-def start_upload_session():
+def start_upload_session(server, auth_token, site_id):
     """
     Creates a POST request that initiates a file upload session.
 
+    'server'        specified server address
+    'auth_token'    authentication token that grants user access to API calls
+    'site_id'       ID of the site that the user is signed into
     Returns a session ID that is used by subsequent functions to identify the upload session.
     """
-    url = SERVER + "/api/2.3/sites/{0}/fileUploads".format(SITE_ID)
-    server_response = requests.post(url, headers={'x-tableau-auth': AUTH_TOKEN})
+    url = server + "/api/2.3/sites/{0}/fileUploads".format(site_id)
+    server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 201)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
     return xml_response.find('t:fileUpload', namespaces=xmlns).attrib.get('uploadSessionId')
 
 
-def get_default_project_id():
+def get_default_project_id(server, auth_token, site_id):
     """
     Returns the project ID for the 'default' project on the Tableau server.
 
-    'site_id'      is the ID of the site where the project is at
-    'token'        is the authentication token for the signed in user
+    'server'        specified server address
+    'auth_token'    authentication token that grants user access to API calls
+    'site_id'       ID of the site that the user is signed into
     """
     page_num, page_size = 1, 100   # Default paginating values
 
     # Builds the request
-    url = SERVER + "/api/2.3/sites/{0}/projects".format(SITE_ID)
+    url = server + "/api/2.3/sites/{0}/projects".format(site_id)
     paged_url = url + "?pageSize={0}&pageNumber={1}".format(page_size, page_num)
-    server_response = requests.get(paged_url, headers={'x-tableau-auth': AUTH_TOKEN})
+    server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
 
@@ -143,7 +191,7 @@ def get_default_project_id():
     # Continue querying if more projects exist on the server
     for page in range(2, max_page + 1):
         paged_url = url + "?pageSize={0}&pageNumber={1}".format(page_size, page)
-        server_response = requests.get(paged_url, headers={'x-tableau-auth': AUTH_TOKEN})
+        server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token})
         _check_status(server_response, 200)
         xml_response = ET.fromstring(_encode_for_display(server_response.text))
         projects.extend(xml_response.findall('.//t:project', namespaces=xmlns))
@@ -152,35 +200,35 @@ def get_default_project_id():
     for project in projects:
         if project.get('name') == 'default' or project.get('name') == 'Default':
             return project.get('id')
-    print("\tProject named 'default' was not found on server")
-    sys.exit(1)
+    raise UserDefinedFieldError("Project named 'default' was not found on server")
 
-if __name__ == '__main__':
+
+def main():
     ##### STEP 0: INITIALIZATION #####
     if len(sys.argv) != 3:
-        print("2 arguments needed (server, username)")
-        sys.exit(1)
-    SERVER = sys.argv[1]
-    USER = sys.argv[2]
-    WORKBOOK_FILE = raw_input("\nWorkbook file to publish (.twb or .twbx file): ")
+        error = "2 arguments needed (server, username)"
+        raise UserDefinedFieldError(error)
+    server = sys.argv[1]
+    username = sys.argv[2]
+    workbook_file = raw_input("\nWorkbook file to publish (include file extension): ")
 
-    print("\n*Publishing '{0}' to the default project as {1}*").format(WORKBOOK_FILE, USER)
-    PASSWORD = getpass.getpass("Password: ")
+    print("\n*Publishing '{0}' to the default project as {1}*").format(workbook_file, username)
+    password = getpass.getpass("Password: ")
 
-    if not os.path.isfile(WORKBOOK_FILE):
-        print("\n{0} does not exist".format(WORKBOOK_FILE))
-        sys.exit(1)
-    workbook_name, file_extension = WORKBOOK_FILE.split('.', 1)
-    workbook_size = os.path.getsize(WORKBOOK_FILE)
+    if not os.path.isfile(workbook_file):
+        error = "{0} does not exist".format(workbook_file)
+        raise UserDefinedFieldError(error)
+    workbook_name, file_extension = workbook_file.split('.', 1)
+    workbook_size = os.path.getsize(workbook_file)
     chunked = workbook_size >= FILESIZE_LIMIT
 
     ##### STEP 1: SIGN IN #####
-    print("\n1. Singing in as " + USER)
-    AUTH_TOKEN, SITE_ID = sign_in()
+    print("\n1. Singing in as " + username)
+    auth_token, site_id = sign_in(server, username, password)
 
     ##### STEP 2: OBTAIN DEFAULT PROJECT ID #####
     print("\n2. Finding the 'default' project to publish to")
-    PROJECT_ID = get_default_project_id()
+    PROJECT_ID = get_default_project_id(server, auth_token, site_id)
 
     ##### STEP 3: PUBLISH WORKBOOK ######
     # Build a general request for publishing
@@ -190,15 +238,15 @@ if __name__ == '__main__':
     xml_request = ET.tostring(xml_request)
 
     if chunked:
-        print("\n3. Publishing '{0}' in {1}MB chunks (workbook over 64MB)".format(WORKBOOK_FILE, CHUNK_SIZE / 1024000))
+        print("\n3. Publishing '{0}' in {1}MB chunks (workbook over 64MB)".format(workbook_file, CHUNK_SIZE / 1024000))
         # Initiates an upload session
-        uploadID = start_upload_session()
+        uploadID = start_upload_session(server, auth_token, site_id)
 
         # URL for PUT request to append chunks for publishing
-        put_url = SERVER + "/api/2.3/sites/{0}/fileUploads/{1}".format(SITE_ID, uploadID)
+        put_url = server + "/api/2.3/sites/{0}/fileUploads/{1}".format(site_id, uploadID)
 
         # Read the contents of the file in chunks of 100KB
-        with open(WORKBOOK_FILE, 'rb') as f:
+        with open(workbook_file, 'rb') as f:
             while True:
                 data = f.read(CHUNK_SIZE)
                 if not data:
@@ -207,36 +255,40 @@ if __name__ == '__main__':
                                                          'tableau_file': ('file', data, 'application/octet-stream')})
                 print("\tPublishing a chunk...")
                 server_response = requests.put(put_url, data=payload,
-                                               headers={'x-tableau-auth': AUTH_TOKEN, "content-type": content_type})
+                                               headers={'x-tableau-auth': auth_token, "content-type": content_type})
                 _check_status(server_response, 200)
 
         # Finish building request for chunking method
         payload, content_type = _make_multipart({'request_payload': ('', xml_request, 'text/xml')})
 
-        publish_url = SERVER + "/api/2.3/sites/{0}/workbooks".format(SITE_ID)
+        publish_url = server + "/api/2.3/sites/{0}/workbooks".format(site_id)
         publish_url += "?uploadSessionId={0}".format(uploadID)
         publish_url += "&workbookType={0}&overwrite=true".format(file_extension)
     else:
-        print("\n3. Publishing '" + WORKBOOK_FILE + "' using the all-in-one method (workbook under 64MB)")
+        print("\n3. Publishing '" + workbook_file + "' using the all-in-one method (workbook under 64MB)")
         # Read the contents of the file to publish
-        with open(WORKBOOK_FILE, 'rb') as f:
+        with open(workbook_file, 'rb') as f:
             workbook_bytes = f.read()
 
         # Finish building request for all-in-one method
         parts = {'request_payload': ('', xml_request, 'text/xml'),
-                 'tableau_workbook': (WORKBOOK_FILE, workbook_bytes, 'application/octet-stream')}
+                 'tableau_workbook': (workbook_file, workbook_bytes, 'application/octet-stream')}
         payload, content_type = _make_multipart(parts)
 
-        publish_url = SERVER + "/api/2.3/sites/{0}/workbooks".format(SITE_ID)
+        publish_url = server + "/api/2.3/sites/{0}/workbooks".format(site_id)
         publish_url += "?workbookType={0}&overwrite=true".format(file_extension)
 
     # Make the request to publish and check status code
     print("\tUploading...")
     server_response = requests.post(publish_url, data=payload,
-                                    headers={'x-tableau-auth': AUTH_TOKEN, 'content-type': content_type})
+                                    headers={'x-tableau-auth': auth_token, 'content-type': content_type})
     _check_status(server_response, 201)
 
     ##### STEP 4: SIGN OUT #####
     print("\n4. Signing out, and invalidating the authentication token")
-    sign_out()
+    sign_out(server, auth_token)
     auth_token = None
+
+
+if __name__ == '__main__':
+    main()

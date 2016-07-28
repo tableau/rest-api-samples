@@ -1,10 +1,39 @@
-import requests
-import xml.etree.ElementTree as ET
+####
+# This script contains functions that demonstrate how to move
+# a workbook from one project to another.
+#
+# To run the script, you must have installed Python 2.7.9 or later,
+# plus the 'requests' library:
+#   http://docs.python-requests.org/en/latest/
+#
+# The script takes in the server address and username as arguments,
+# where the server address has no trailing slash (e.g. http://localhost).
+# Run the script in terminal by entering:
+#   python move_workbook_projects.py <server_address> <username>
+#
+# When running the script, it will prompt for the following:
+# 'Name of workbook to move': Enter name of workbook to move
+# 'Destination project':      Enter name of project to move workbook into
+# 'Password':                 Enter password for the user to log in as.
+####
+
+import requests # Contains methods used to make HTTP requests
+import xml.etree.ElementTree as ET # Contains methods used to build and parse XML
 import sys
 import math
 import getpass
 
+# The namespace for the REST API is 'http://tableausoftware.com/api' for Tableau Server 9.0
+# or 'http://tableau.com/api' for Tableau Server 9.1 or later
 xmlns = {'t': 'http://tableau.com/api'}
+
+
+class ApiCallError(Exception):
+    pass
+
+
+class UserDefinedFieldError(Exception):
+    pass
 
 
 def _encode_for_display(text):
@@ -26,26 +55,33 @@ def _check_status(server_response, success_code):
     'success_code'          the expected success code for the response
     """
     if server_response.status_code != success_code:
-        print(_encode_for_display(server_response.text))
-        sys.exit(1)
+        parsed_response = ET.fromstring(server_response.text)
+        code = parsed_response.find('t:error', namespaces=xmlns).attrib.get('code')
+        summary = parsed_response.find('.//t:summary', namespaces=xmlns).text
+        detail = parsed_response.find('.//t:detail', namespaces=xmlns).text
+        error_message = '\n\n{0}: {1}\n\t{2}'.format(code, summary, detail)
+        raise ApiCallError(error_message)
     return
 
 
-def sign_in(site=""):
+def sign_in(server, username, password, site=""):
     """
-    Signs in to the server specified in the global SERVER variable with
-    credentials specified in the global USER and PASSWORD variables.
+    Signs in to the server specified with the given credentials
 
+    'server'   specified server address
+    'name'     is the name (not ID) of the user to sign in as.
+               Note that most of the functions in this example require that the user
+               have server administrator permissions.
+    'password' is the password for the user.
     'site'     is the ID (as a string) of the site on the server to sign in to. The
                default is "", which signs in to the default site.
-
-    Returns the authentication token and site ID.
+    Returns the authentication token and the site ID.
     """
-    url = SERVER + "/api/2.3/auth/signin"
+    url = server + "/api/2.3/auth/signin"
 
     # Builds the request
     xml_request = ET.Element('tsRequest')
-    credentials_element = ET.SubElement(xml_request, 'credentials', name=USER, password=PASSWORD)
+    credentials_element = ET.SubElement(xml_request, 'credentials', name=username, password=password)
     ET.SubElement(credentials_element, 'site', contentUrl=site)
     xml_request = ET.tostring(xml_request)
 
@@ -65,46 +101,58 @@ def sign_in(site=""):
     return token, site_id
 
 
-def sign_out():
+def sign_out(server, auth_token):
     """
     Destroys the active session and invalidates authentication token.
+
+    'server'        specified server address
+    'auth_token'    authentication token that grants user access to API calls
     """
-    url = SERVER + "/api/2.3/auth/signout"
-    server_response = requests.post(url, headers={'x-tableau-auth': AUTH_TOKEN})
+    url = server + "/api/2.3/auth/signout"
+    server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 204)
     return
 
 
-def get_workbook_id():
+def get_workbook_id(server, auth_token, site_id, workbook_name):
     """
     Gets the id of the desired workbook to relocate.
 
+    'server'        specified server address
+    'auth_token'    authentication token that grants user access to API calls
+    'site_id'       ID of the site that the user is signed into
+    'workbook_name' name of workbook to get ID of
     Returns the workbook id and the project id that contains the workbook.
     """
-    url = SERVER + "/api/2.3/sites/{0}/workbooks".format(SITE_ID)
-    server_response = requests.get(url, headers={'x-tableau-auth': AUTH_TOKEN})
+    url = server + "/api/2.3/sites/{0}/workbooks".format(site_id)
+    server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
 
     workbooks = xml_response.findall('.//t:workbook', namespaces=xmlns)
     for workbook in workbooks:
-        if workbook.get('name') == WORKBOOK:
+        if workbook.get('name') == workbook_name:
             source_project_id = workbook.find('.//t:project', namespaces=xmlns).attrib.get('id')
             return source_project_id, workbook.get('id')
-    print("\tWorkbook named '{0}' not found.".format(WORKBOOK))
-    sys.exit(1)
+    error = "Workbook named '{0}' not found.".format(workbook_name)
+    raise UserDefinedFieldError(error)
 
 
-def get_project_id():
+def get_project_id(server, auth_token, site_id, dest_project):
     """
     Returns the project ID of the desired project
+
+    'server'        specified server address
+    'auth_token'    authentication token that grants user access to API calls
+    'site_id'       ID of the site that the user is signed into
+    'dest_project'  name of destination project to get ID of
     """
     page_num, page_size = 1, 100   # Default paginating values
 
     # Builds the request
-    url = SERVER + "/api/2.3/sites/{0}/projects".format(SITE_ID)
+    url = server + "/api/2.3/sites/{0}/projects".format(site_id)
     paged_url = url + "?pageSize={0}&pageNumber={1}".format(page_size, page_num)
-    server_response = requests.get(paged_url, headers={'x-tableau-auth': AUTH_TOKEN})
+    server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
 
@@ -117,68 +165,78 @@ def get_project_id():
     # Continue querying if more projects exist on the server
     for page in range(2, max_page + 1):
         paged_url = url + "?pageSize={0}&pageNumber={1}".format(page_size, page)
-        server_response = requests.get(paged_url, headers={'x-tableau-auth': AUTH_TOKEN})
+        server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token})
         _check_status(server_response, 200)
         xml_response = ET.fromstring(_encode_for_display(server_response.text))
         projects.extend(xml_response.findall('.//t:project', namespaces=xmlns))
 
     # Look through all projects to find the 'default' one
     for project in projects:
-        if project.get('name') == NEW_PROJECT:
+        if project.get('name') == dest_project:
             return project.get('id')
-    print("\tProject named '{0}' was not found on server".format(NEW_PROJECT))
-    sys.exit(1)
+    error = "Project named '{0}' was not found on server".format(dest_project)
+    raise UserDefinedFieldError(error)
 
 
-def move_workbook(project_id):
+def move_workbook(server, auth_token, site_id, workbook_id, project_id):
     """
     Moves the specified workbook to another project.
+
+    'server'        specified server address
+    'auth_token'    authentication token that grants user access to API calls
+    'site_id'       ID of the site that the user is signed into
+    'workbook_id'   ID of the workbook to move
+    'project_id'    ID of the project to move workbook into
     """
-    url = SERVER + "/api/2.3/sites/{0}/workbooks/{1}".format(SITE_ID, WORKBOOK_ID)
+    url = server + "/api/2.3/sites/{0}/workbooks/{1}".format(site_id, workbook_id)
     # Build the request to move workbook
     xml_request = ET.Element('tsRequest')
     workbook_element = ET.SubElement(xml_request, 'workbook')
     ET.SubElement(workbook_element, 'project', id=project_id)
     xml_request = ET.tostring(xml_request)
 
-    server_response = requests.put(url, data=xml_request, headers={'x-tableau-auth': AUTH_TOKEN})
+    server_response = requests.put(url, data=xml_request, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
 
 
-if __name__ == "__main__":
+def main():
     ##### STEP 0: INITIALIZATION #####
     if len(sys.argv) != 3:
-        print("2 arguments needed (server, username)")
-        sys.exit(1)
-    SERVER = sys.argv[1]
-    USER = sys.argv[2]
-    WORKBOOK = raw_input("\nName of workbook to move: ")
-    NEW_PROJECT = raw_input("\nDestination project: ")
+        error = "2 arguments needed (server, username)"
+        raise UserDefinedFieldError(error)
+    server = sys.argv[1]
+    username = sys.argv[2]
+    workbook_name = raw_input("\nName of workbook to move: ")
+    dest_project = raw_input("\nDestination project: ")
 
-    print("\n*Moving '{0}' workbook to '{1}' project as {2}*".format(WORKBOOK, NEW_PROJECT, USER))
-    PASSWORD = getpass.getpass("Password: ")
+    print("\n*Moving '{0}' workbook to '{1}' project as {2}*".format(workbook_name, dest_project, username))
+    password = getpass.getpass("Password: ")
 
     ##### STEP 1: Sign in #####
-    print("\n1. Singing in as " + USER)
-    AUTH_TOKEN, SITE_ID = sign_in()
+    print("\n1. Singing in as " + username)
+    auth_token, site_id = sign_in(server, username, password)
 
     ##### STEP 2: Find new project id #####
-    print("\n2. Finding project id of '{0}'".format(NEW_PROJECT))
-    DEST_PROJECT_ID = get_project_id()
+    print("\n2. Finding project id of '{0}'".format(dest_project))
+    dest_project_id = get_project_id(server, auth_token, site_id, dest_project)
 
     ##### STEP 3: Find workbook id #####
-    print("\n3. Finding workbook id of '{0}'".format(WORKBOOK))
-    SOURCE_PROJECT_ID, WORKBOOK_ID = get_workbook_id()
+    print("\n3. Finding workbook id of '{0}'".format(workbook_name))
+    source_project_id, workbook_id = get_workbook_id(server, auth_token, site_id, workbook_name)
 
     # Check if the workbook is already in the desired project
-    if SOURCE_PROJECT_ID == DEST_PROJECT_ID:
-        print("\tWorkbook already in destination project")
-        sys.exit(1)
+    if source_project_id == dest_project_id:
+        error = "Workbook already in destination project"
+        raise UserDefinedFieldError(error)
 
     ##### STEP 4: Move workbook #####
-    print("\n4. Moving workbook to '{0}'".format(NEW_PROJECT))
-    move_workbook(DEST_PROJECT_ID)
+    print("\n4. Moving workbook to '{0}'".format(dest_project))
+    move_workbook(server, auth_token, site_id, workbook_id, dest_project_id)
 
     ##### STEP 5: Sign out #####
     print("\n5. Signing out and invalidating the authentication token")
-    sign_out()
+    sign_out(server, auth_token)
+
+
+if __name__ == "__main__":
+    main()
