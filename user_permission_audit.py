@@ -43,6 +43,9 @@ permissions = {"Read", "Write", "Filter", "AddComment", "ViewComments", "ShareVi
 # Possible modes for to set the permissions
 modes = {"Allow", "Deny"}
 
+# If using python version 3.x, 'raw_input()' is changed to 'input()'
+if sys.version[0] == '3': raw_input=input
+
 
 class ApiCallError(Exception):
     pass
@@ -69,13 +72,21 @@ def _check_status(server_response, success_code):
 
     'server_response'       the response received from the server
     'success_code'          the expected success code for the response
+    Throws an ApiCallError exception if the API call fails.
     """
     if server_response.status_code != success_code:
         parsed_response = ET.fromstring(server_response.text)
-        code = parsed_response.find('t:error', namespaces=xmlns).attrib.get('code')
-        summary = parsed_response.find('.//t:summary', namespaces=xmlns).text
-        detail = parsed_response.find('.//t:detail', namespaces=xmlns).text
-        error_message = '\n\n{0}: {1}\n\t{2}'.format(code, summary, detail)
+
+        # Obtain the 3 xml tags from the response: error, summary, and detail tags
+        error_element = parsed_response.find('t:error', namespaces=xmlns)
+        summary_element = parsed_response.find('.//t:summary', namespaces=xmlns)
+        detail_element = parsed_response.find('.//t:detail', namespaces=xmlns)
+
+        # Retrieve the error code, summary, and detail if the response contains them
+        code = error_element.attrib.get('code', 'unknown') if error_element is not None else 'unknown code'
+        summary = summary_element.text if summary_element is not None else 'unknown summary'
+        detail = detail_element.text if detail_element is not None else 'unknown detail'
+        error_message = '{0}: {1} - {2}'.format(code, summary, detail)
         raise ApiCallError(error_message)
     return
 
@@ -151,7 +162,7 @@ def get_workbook_id(server, auth_token, site_id, workbook_name):
         if workbook.get('name') == workbook_name:
             return workbook.get('id')
     error = "Workbook named '{0}' not found.".format(workbook_name)
-    raise UserDefinedFieldError(error)
+    raise LookupError(error)
 
 
 def get_user_id(server, auth_token, site_id, username_to_audit):
@@ -174,7 +185,7 @@ def get_user_id(server, auth_token, site_id, username_to_audit):
         if user.get('name') == username_to_audit:
             return user.get('id')
     error = "User id for {0} not found".format(username_to_audit)
-    raise UserDefinedFieldError(error)
+    raise LookupError(error)
 
 
 def query_permission(server, auth_token, site_id, workbook_id, user_id):
@@ -202,7 +213,7 @@ def query_permission(server, auth_token, site_id, workbook_id, user_id):
         if user is not None and user.get('id') == user_id:
             return capability.findall('.//t:capability', namespaces=xmlns)
     error = "Permissions not found for this workbook"
-    raise UserDefinedFieldError(error)
+    raise LookupError(error)
 
 
 def delete_permission(server, auth_token, site_id, workbook_id, user_id, permission_name, existing_mode):

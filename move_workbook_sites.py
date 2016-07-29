@@ -40,6 +40,9 @@ FILESIZE_LIMIT = 1024 * 1024 * 64   # 64MB
 # For when a workbook is over 64MB, break it into 5MB(standard chunk size) chunks
 CHUNK_SIZE = 1024 * 1024 * 5    # 5MB
 
+# If using python version 3.x, 'raw_input()' is changed to 'input()'
+if sys.version[0] == '3': raw_input=input
+
 
 class ApiCallError(Exception):
     pass
@@ -88,13 +91,22 @@ def _check_status(server_response, success_code):
 
     'server_response'       the response received from the server
     'success_code'          the expected success code for the response
+    Throws an ApiCallError exception if the API call fails.
     """
     if server_response.status_code != success_code:
         parsed_response = ET.fromstring(server_response.text)
-        code = parsed_response.find('t:error', namespaces=xmlns).attrib.get('code')
-        summary = parsed_response.find('.//t:summary', namespaces=xmlns).text
-        detail = parsed_response.find('.//t:detail', namespaces=xmlns).text
-        raise ApiCallError('{0}: {1}\n\t{2}'.format(code, summary, detail))
+
+        # Obtain the 3 xml tags from the response: error, summary, and detail tags
+        error_element = parsed_response.find('t:error', namespaces=xmlns)
+        summary_element = parsed_response.find('.//t:summary', namespaces=xmlns)
+        detail_element = parsed_response.find('.//t:detail', namespaces=xmlns)
+
+        # Retrieve the error code, summary, and detail if the response contains them
+        code = error_element.attrib.get('code', 'unknown') if error_element is not None else 'unknown code'
+        summary = summary_element.text if summary_element is not None else 'unknown summary'
+        detail = detail_element.text if detail_element is not None else 'unknown detail'
+        error_message = '{0}: {1} - {2}'.format(code, summary, detail)
+        raise ApiCallError(error_message)
     return
 
 
@@ -184,7 +196,7 @@ def get_workbook_id(server, auth_token, site_id, workbook_name):
         if workbook.get('name') == workbook_name:
             return workbook.get('id')
     error = "Workbook named '{0}' not found.".format(workbook_name)
-    raise UserDefinedFieldError(error)
+    raise LookupError(error)
 
 
 def get_default_project_id(server, auth_token, site_id):
@@ -223,7 +235,7 @@ def get_default_project_id(server, auth_token, site_id):
         if project.get('name') == 'default' or project.get('name') == 'Default':
             return project.get('id')
     error = "Project named 'default' was not found in destination site"
-    raise UserDefinedFieldError(error)
+    raise LookupError(error)
 
 
 def download(server, auth_token, site_id, workbook_id):
