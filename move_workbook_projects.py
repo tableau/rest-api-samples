@@ -224,7 +224,7 @@ def main():
     password = getpass.getpass("Password: ")
 
     ##### STEP 1: Sign in #####
-    print("\n1. Singing in as " + username)
+    print("\n1. Signing in as " + username)
     auth_token, site_id = sign_in(server, username, password)
 
     ##### STEP 2: Find new project id #####

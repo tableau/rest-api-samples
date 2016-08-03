@@ -234,7 +234,7 @@ def main():
     chunked = workbook_size >= FILESIZE_LIMIT
 
     ##### STEP 1: SIGN IN #####
-    print("\n1. Singing in as " + username)
+    print("\n1. Signing in as " + username)
     auth_token, site_id = sign_in(server, username, password)
 
     ##### STEP 2: OBTAIN DEFAULT PROJECT ID #####

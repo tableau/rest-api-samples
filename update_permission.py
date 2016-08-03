@@ -293,7 +293,7 @@ def main():
     password = getpass.getpass("Password for {0}: ".format(server_username))
 
     ##### STEP 1: Sign in #####
-    print("\n1. Singing in as " + server_username)
+    print("\n1. Signing in as " + server_username)
     auth_token, site_id = sign_in(server, server_username, password)
 
     ##### STEP 2: Find id of username to update #####

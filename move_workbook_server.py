@@ -50,9 +50,6 @@ FILESIZE_LIMIT = 1024 * 1024 * 64   # 64MB
 # For when a workbook is over 64MB, break it into 5MB(standard chunk size) chunks
 CHUNK_SIZE = 1024 * 1024 * 5    # 5MB
 
-# Flag to determine whether to verify SSL or not (False if https does not work)
-SSL_VERIFY = True
-
 # If using python version 3.x, 'raw_input()' is changed to 'input()'
 if sys.version[0] == '3': raw_input=input
 
@@ -145,7 +142,7 @@ def sign_in(server, username, password, site=""):
     xml_request = ET.tostring(xml_request)
 
     # Make the request to server
-    server_response = requests.post(url, data=xml_request, verify=SSL_VERIFY)
+    server_response = requests.post(url, data=xml_request)
     _check_status(server_response, 200)
 
     # ASCII encode server response to enable displaying to console
@@ -168,7 +165,7 @@ def sign_out(server, auth_token):
     'auth_token'    authentication token that grants user access to API calls
     """
     url = server + "/api/2.3/auth/signout"
-    server_response = requests.post(url, headers={'x-tableau-auth': auth_token}, verify=SSL_VERIFY)
+    server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 204)
     return
 
@@ -183,7 +180,7 @@ def start_upload_session(server, auth_token, site_id):
     Returns a session ID that is used by subsequent functions to identify the upload session.
     """
     url = server + "/api/2.3/sites/{0}/fileUploads".format(site_id)
-    server_response = requests.post(url, headers={'x-tableau-auth': auth_token}, verify=SSL_VERIFY)
+    server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 201)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
     return xml_response.find('t:fileUpload', namespaces=xmlns).attrib.get('uploadSessionId')
@@ -200,7 +197,7 @@ def get_workbook_id(server, auth_token, site_id, workbook_name):
     Returns the workbook id and the project id that contains the workbook.
     """
     url = server + "/api/2.3/sites/{0}/workbooks".format(site_id)
-    server_response = requests.get(url, headers={'x-tableau-auth': auth_token}, verify=SSL_VERIFY)
+    server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
 
@@ -225,7 +222,7 @@ def get_default_project_id(server, auth_token, site_id):
     # Builds the request
     url = server + "/api/2.3/sites/{0}/projects".format(site_id)
     paged_url = url + "?pageSize={0}&pageNumber={1}".format(page_size, page_num)
-    server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token}, verify=SSL_VERIFY)
+    server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
 
@@ -238,7 +235,7 @@ def get_default_project_id(server, auth_token, site_id):
     # Continue querying if more projects exist on the server
     for page in range(2, max_page + 1):
         paged_url = url + "?pageSize={0}&pageNumber={1}".format(page_size, page)
-        server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token}, verify=SSL_VERIFY)
+        server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token})
         _check_status(server_response, 200)
         xml_response = ET.fromstring(_encode_for_display(server_response.text))
         projects.extend(xml_response.findall('.//t:project', namespaces=xmlns))
@@ -262,7 +259,7 @@ def download(server, auth_token, site_id, workbook_id):
     """
     print("\tDownloading workbook to a temp file")
     url = server + "/api/2.3/sites/{0}/workbooks/{1}/content".format(site_id, workbook_id)
-    server_response = requests.get(url, headers={'x-tableau-auth': auth_token}, verify=SSL_VERIFY)
+    server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
 
     # Header format: Content-Disposition: name="tableau_workbook"; filename="workbook-filename"
@@ -310,8 +307,7 @@ def publish_workbook(server, auth_token, site_id, workbook_filename, dest_projec
                                                          'tableau_file': ('file', data, 'application/octet-stream')})
                 print("\tPublishing a chunk...")
                 server_response = requests.put(put_url, data=payload,
-                                               headers={'x-tableau-auth': auth_token, "content-type": content_type},
-                                               verify=SSL_VERIFY)
+                                               headers={'x-tableau-auth': auth_token, "content-type": content_type})
                 _check_status(server_response, 200)
 
         # Finish building request for chunking method
@@ -338,8 +334,7 @@ def publish_workbook(server, auth_token, site_id, workbook_filename, dest_projec
     # Make the request to publish and check status code
     print("\tUploading...")
     server_response = requests.post(publish_url, data=payload,
-                                    headers={'x-tableau-auth': auth_token, 'content-type': content_type},
-                                    verify=SSL_VERIFY)
+                                    headers={'x-tableau-auth': auth_token, 'content-type': content_type})
     _check_status(server_response, 201)
 
 
