@@ -18,6 +18,7 @@
 # 'Password':                 Enter password for the user to log in as.
 ####
 
+from version import VERSION
 import requests # Contains methods used to make HTTP requests
 import xml.etree.ElementTree as ET # Contains methods used to build and parse XML
 import sys
@@ -102,7 +103,7 @@ def _check_status(server_response, success_code):
         detail_element = parsed_response.find('.//t:detail', namespaces=xmlns)
 
         # Retrieve the error code, summary, and detail if the response contains them
-        code = error_element.attrib.get('code', 'unknown') if error_element is not None else 'unknown code'
+        code = error_element.get('code', 'unknown') if error_element is not None else 'unknown code'
         summary = summary_element.text if summary_element is not None else 'unknown summary'
         detail = detail_element.text if detail_element is not None else 'unknown detail'
         error_message = '{0}: {1} - {2}'.format(code, summary, detail)
@@ -123,7 +124,7 @@ def sign_in(server, username, password, site=""):
                default is "", which signs in to the default site.
     Returns the authentication token and the site ID.
     """
-    url = server + "/api/2.3/auth/signin"
+    url = server + "/api/{0}/auth/signin".format(VERSION)
 
     # Builds the request
     xml_request = ET.Element('tsRequest')
@@ -142,8 +143,8 @@ def sign_in(server, username, password, site=""):
     parsed_response = ET.fromstring(server_response)
 
     # Gets the auth token and site ID
-    token = parsed_response.find('t:credentials', namespaces=xmlns).attrib.get('token')
-    site_id = parsed_response.find('.//t:site', namespaces=xmlns).attrib.get('id')
+    token = parsed_response.find('t:credentials', namespaces=xmlns).get('token')
+    site_id = parsed_response.find('.//t:site', namespaces=xmlns).get('id')
     return token, site_id
 
 
@@ -154,7 +155,7 @@ def sign_out(server, auth_token):
     'server'        specified server address
     'auth_token'    authentication token that grants user access to API calls
     """
-    url = server + "/api/2.3/auth/signout"
+    url = server + "/api/{0}/auth/signout".format(VERSION)
     server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 204)
     return
@@ -169,11 +170,11 @@ def start_upload_session(server, auth_token, site_id):
     'site_id'       ID of the site that the user is signed into
     Returns a session ID that is used by subsequent functions to identify the upload session.
     """
-    url = server + "/api/2.3/sites/{0}/fileUploads".format(site_id)
+    url = server + "/api/{0}/sites/{1}/fileUploads".format(VERSION, site_id)
     server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 201)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
-    return xml_response.find('t:fileUpload', namespaces=xmlns).attrib.get('uploadSessionId')
+    return xml_response.find('t:fileUpload', namespaces=xmlns).get('uploadSessionId')
 
 
 def get_default_project_id(server, auth_token, site_id):
@@ -187,14 +188,14 @@ def get_default_project_id(server, auth_token, site_id):
     page_num, page_size = 1, 100   # Default paginating values
 
     # Builds the request
-    url = server + "/api/2.3/sites/{0}/projects".format(site_id)
+    url = server + "/api/{0}/sites/{1}/projects".format(VERSION, site_id)
     paged_url = url + "?pageSize={0}&pageNumber={1}".format(page_size, page_num)
     server_response = requests.get(paged_url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
 
     # Used to determine if more requests are required to find all projects on server
-    total_projects = int(xml_response.find('t:pagination', namespaces=xmlns).attrib.get('totalAvailable'))
+    total_projects = int(xml_response.find('t:pagination', namespaces=xmlns).get('totalAvailable'))
     max_page = int(math.ceil(total_projects / page_size))
 
     projects = xml_response.findall('.//t:project', namespaces=xmlns)
@@ -254,7 +255,7 @@ def main():
         uploadID = start_upload_session(server, auth_token, site_id)
 
         # URL for PUT request to append chunks for publishing
-        put_url = server + "/api/2.3/sites/{0}/fileUploads/{1}".format(site_id, uploadID)
+        put_url = server + "/api/{0}/sites/{1}/fileUploads/{2}".format(VERSION, site_id, uploadID)
 
         # Read the contents of the file in chunks of 100KB
         with open(workbook_file, 'rb') as f:
@@ -272,7 +273,7 @@ def main():
         # Finish building request for chunking method
         payload, content_type = _make_multipart({'request_payload': ('', xml_request, 'text/xml')})
 
-        publish_url = server + "/api/2.3/sites/{0}/workbooks".format(site_id)
+        publish_url = server + "/api/{0}/sites/{1}/workbooks".format(VERSION, site_id)
         publish_url += "?uploadSessionId={0}".format(uploadID)
         publish_url += "&workbookType={0}&overwrite=true".format(file_extension)
     else:
@@ -286,7 +287,7 @@ def main():
                  'tableau_workbook': (workbook_file, workbook_bytes, 'application/octet-stream')}
         payload, content_type = _make_multipart(parts)
 
-        publish_url = server + "/api/2.3/sites/{0}/workbooks".format(site_id)
+        publish_url = server + "/api/{0}/sites/{1}/workbooks".format(VERSION, site_id)
         publish_url += "?workbookType={0}&overwrite=true".format(file_extension)
 
     # Make the request to publish and check status code

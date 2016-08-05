@@ -27,6 +27,7 @@
 #    Allow, Deny
 ####
 
+from version import VERSION
 import requests # Contains methods used to make HTTP requests
 import xml.etree.ElementTree as ET # Contains methods used to build and parse XML
 import sys
@@ -83,7 +84,7 @@ def _check_status(server_response, success_code):
         detail_element = parsed_response.find('.//t:detail', namespaces=xmlns)
 
         # Retrieve the error code, summary, and detail if the response contains them
-        code = error_element.attrib.get('code', 'unknown') if error_element is not None else 'unknown code'
+        code = error_element.get('code', 'unknown') if error_element is not None else 'unknown code'
         summary = summary_element.text if summary_element is not None else 'unknown summary'
         detail = detail_element.text if detail_element is not None else 'unknown detail'
         error_message = '{0}: {1} - {2}'.format(code, summary, detail)
@@ -104,7 +105,7 @@ def sign_in(server, username, password, site=""):
                default is "", which signs in to the default site.
     Returns the authentication token and the site ID.
     """
-    url = server + "/api/2.3/auth/signin"
+    url = server + "/api/{0}/auth/signin".format(VERSION)
 
     # Builds the request
     xml_request = ET.Element('tsRequest')
@@ -123,9 +124,10 @@ def sign_in(server, username, password, site=""):
     parsed_response = ET.fromstring(server_response)
 
     # Gets the auth token and site ID
-    token = parsed_response.find('t:credentials', namespaces=xmlns).attrib.get('token')
-    site_id = parsed_response.find('.//t:site', namespaces=xmlns).attrib.get('id')
-    return token, site_id
+    token = parsed_response.find('t:credentials', namespaces=xmlns).get('token')
+    site_id = parsed_response.find('.//t:site', namespaces=xmlns).get('id')
+    user_id = parsed_response.find('.//t:user', namespaces=xmlns).get('id')
+    return token, site_id, user_id
 
 
 def sign_out(server, auth_token):
@@ -135,23 +137,24 @@ def sign_out(server, auth_token):
     'server'        specified server address
     'auth_token'    authentication token that grants user access to API calls
     """
-    url = server + "/api/2.3/auth/signout"
+    url = server + "/api/{0}/auth/signout".format(VERSION)
     server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 204)
     return
 
 
-def get_workbook_id(server, auth_token, site_id, workbook_name):
+def get_workbook_id(server, auth_token, user_id, site_id, workbook_name):
     """
     Gets the id of the desired workbook to relocate.
 
     'server'        specified server address
     'auth_token'    authentication token that grants user access to API calls
+    'user_id'       ID of user with access to workbooks
     'site_id'       ID of the site that the user is signed into
     'workbook_name' name of workbook to get ID of
     Returns the workbook id and the project id that contains the workbook.
     """
-    url = server + "/api/2.3/sites/{0}/workbooks".format(site_id)
+    url = server + "/api/{0}/sites/{1}/users/{2}/workbooks".format(VERSION, site_id, user_id)
     server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
@@ -174,7 +177,7 @@ def get_user_id(server, auth_token, site_id, username_to_audit):
     'site_id'               ID of the site that the user is signed into
     'username_to_audit'     username to audit permission for on server
     """
-    url = server + "/api/2.3/sites/{0}/users".format(site_id)
+    url = server + "/api/{0}/sites/{1}/users".format(VERSION, site_id)
     server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     server_response = ET.fromstring(_encode_for_display(server_response.text))
@@ -198,7 +201,7 @@ def query_permission(server, auth_token, site_id, workbook_id, user_id):
     'workbook_id'   ID of workbook to audit permission in
     'user_id'       ID of the user to audit
     """
-    url = server + "/api/2.3/sites/{0}/workbooks/{1}/permissions".format(site_id, workbook_id)
+    url = server + "/api/{0}/sites/{1}/workbooks/{2}/permissions".format(VERSION, site_id, workbook_id)
     server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     server_response = _encode_for_display(server_response.text)
@@ -228,7 +231,8 @@ def delete_permission(server, auth_token, site_id, workbook_id, user_id, permiss
     'permission_name'   name of permission to add or update
     'existing_mode'     is the mode of the permission already set for the workbook
     """
-    url = server + "/api/2.3/sites/{0}/workbooks/{1}/permissions/users/{2}/{3}/{4}".format(site_id,
+    url = server + "/api/{0}/sites/{1}/workbooks/{2}/permissions/users/{3}/{4}/{5}".format(VERSION,
+                                                                                           site_id,
                                                                                            workbook_id,
                                                                                            user_id,
                                                                                            permission_name,
@@ -250,7 +254,7 @@ def add_new_permission(server, auth_token, site_id, workbook_id, user_id, permis
     'permission_name'   name of permission to add or update
     'permission_mode'   mode to set the permission
     """
-    url = server + "/api/2.3/sites/{0}/workbooks/{1}/permissions".format(site_id, workbook_id)
+    url = server + "/api/{0}/sites/{1}/workbooks/{2}/permissions".format(VERSION, site_id, workbook_id)
 
     # Build the request
     xml_request = ET.Element('tsRequest')
@@ -293,7 +297,7 @@ def main():
 
     ##### STEP 1: Sign in #####
     print("\n1. Signing in as " + server_username)
-    auth_token, site_id = sign_in(server, server_username, password)
+    auth_token, site_id, user_id = sign_in(server, server_username, password)
 
     ##### STEP 2: Find id of username to audit #####
     print("\n2. Finding user id of {0}".format(username_to_audit))
@@ -301,7 +305,7 @@ def main():
 
     ##### STEP 3: Find workbook id #####
     print("\n3. Finding workbook id of '{0}'".format(workbook_name))
-    workbook_id = get_workbook_id(server, auth_token, site_id, workbook_name)
+    workbook_id = get_workbook_id(server, auth_token, user_id, site_id, workbook_name)
 
     ##### STEP 4: Query permissions #####
     print("\n4. Querying all permissions for workbook")
