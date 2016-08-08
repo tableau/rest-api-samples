@@ -17,9 +17,6 @@
 # 'Destination server username':     Enter username to sign into destination server
 # 'Password for source server':      Enter password to sign into source server
 # 'Password for destination server': Enter password to sign into destination server
-#
-# Note: If either server address uses the https protocol, requests module may fail
-# to send requests. In that case, set the SSL_VERIFY flag to False.
 ####
 
 from version import VERSION

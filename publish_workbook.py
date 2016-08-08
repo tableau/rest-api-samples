@@ -222,16 +222,23 @@ def main():
         raise UserDefinedFieldError(error)
     server = sys.argv[1]
     username = sys.argv[2]
-    workbook_file = raw_input("\nWorkbook file to publish (include file extension): ")
+    workbook_file_path = raw_input("\nWorkbook file to publish (include file extension): ")
+
+    # Workbook file with extension, without full path
+    workbook_file = os.path.basename(workbook_file_path)
 
     print("\n*Publishing '{0}' to the default project as {1}*".format(workbook_file, username))
     password = getpass.getpass("Password: ")
 
-    if not os.path.isfile(workbook_file):
-        error = "{0}: file not found".format(workbook_file)
+    if not os.path.isfile(workbook_file_path):
+        error = "{0}: file not found".format(workbook_file_path)
         raise IOError(error)
-    workbook_name, file_extension = workbook_file.split('.', 1)
-    workbook_size = os.path.getsize(workbook_file)
+
+    # Break workbook file by name and extension
+    workbook_filename, file_extension = workbook_file.split('.', 1)
+
+    # Get workbook size to check if chunking is necessary
+    workbook_size = os.path.getsize(workbook_file_path)
     chunked = workbook_size >= FILESIZE_LIMIT
 
     ##### STEP 1: SIGN IN #####
@@ -240,13 +247,13 @@ def main():
 
     ##### STEP 2: OBTAIN DEFAULT PROJECT ID #####
     print("\n2. Finding the 'default' project to publish to")
-    PROJECT_ID = get_default_project_id(server, auth_token, site_id)
+    project_id = get_default_project_id(server, auth_token, site_id)
 
     ##### STEP 3: PUBLISH WORKBOOK ######
     # Build a general request for publishing
     xml_request = ET.Element('tsRequest')
-    workbook_element = ET.SubElement(xml_request, 'workbook', name=workbook_name)
-    ET.SubElement(workbook_element, 'project', id=PROJECT_ID)
+    workbook_element = ET.SubElement(xml_request, 'workbook', name=workbook_filename)
+    ET.SubElement(workbook_element, 'project', id=project_id)
     xml_request = ET.tostring(xml_request)
 
     if chunked:
@@ -258,7 +265,7 @@ def main():
         put_url = server + "/api/{0}/sites/{1}/fileUploads/{2}".format(VERSION, site_id, uploadID)
 
         # Read the contents of the file in chunks of 100KB
-        with open(workbook_file, 'rb') as f:
+        with open(workbook_file_path, 'rb') as f:
             while True:
                 data = f.read(CHUNK_SIZE)
                 if not data:
@@ -279,7 +286,7 @@ def main():
     else:
         print("\n3. Publishing '" + workbook_file + "' using the all-in-one method (workbook under 64MB)")
         # Read the contents of the file to publish
-        with open(workbook_file, 'rb') as f:
+        with open(workbook_file_path, 'rb') as f:
             workbook_bytes = f.read()
 
         # Finish building request for all-in-one method
