@@ -3,6 +3,14 @@
 # a workbook using the Tableau Server REST API. It will publish a
 # specified workbook to the 'default' project of a given server.
 #
+# Note: The REST API publish process cannot automatically include
+# extracts or other resources that the workbook uses. Therefore,
+# a .twb file with data from a local computer cannot be published.
+# For simplicity, this sample will only accept a .twbx file to publish.
+#
+# For more information, refer to the documentations on 'Publish Workbook'
+# (https://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm)
+#
 # To run the script, you must have installed Python 2.7.9 or later,
 # plus the 'requests' library:
 #   http://docs.python-requests.org/en/latest/
@@ -14,7 +22,7 @@
 #
 # When running the script, it will prompt for the following:
 # 'Workbook file to publish': Enter file path to the desired workbook file
-#                             to publish (either a .twb or .twbx file).
+#                             to publish (.twbx file).
 # 'Password':                 Enter password for the user to log in as.
 ####
 
@@ -223,6 +231,7 @@ def main():
     server = sys.argv[1]
     username = sys.argv[2]
     workbook_file_path = raw_input("\nWorkbook file to publish (include file extension): ")
+    workbook_file_path = os.path.abspath(workbook_file_path)
 
     # Workbook file with extension, without full path
     workbook_file = os.path.basename(workbook_file_path)
@@ -236,6 +245,10 @@ def main():
 
     # Break workbook file by name and extension
     workbook_filename, file_extension = workbook_file.split('.', 1)
+
+    if file_extension != 'twbx':
+        error = "This sample only accepts .twbx files to publish. More information in file comments."
+        raise UserDefinedFieldError(error)
 
     # Get workbook size to check if chunking is necessary
     workbook_size = os.path.getsize(workbook_file_path)
