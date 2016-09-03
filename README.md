@@ -1,12 +1,12 @@
-# rest-api-examples
-This repository contains examples for the Tableau REST API. Official developer docs for the REST API can be found [here](http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm).
+# rest-api-samples
+This repository contains samples for the Tableau REST API. Official developer docs for the REST API can be found [here](http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm).
 
 Getting Started
 ---------------
 * Clone this repository
-* Try the examples against your Tableau Server or Tableau Online
-* Use 'Issues' to note any bugs or to request new examples
-* Let us know if you have examples of your own you'd like to share
+* Try the samples against your Tableau Server or Tableau Online
+* Use 'Issues' to note any bugs or to request new samples
+* Let us know if you have samples of your own you'd like to share
 
 Requirements
 ---------------
@@ -17,12 +17,12 @@ Running the samples
 ---------------
 * All samples can be run using the command prompt or terminal
 * All samples require 2 arguments: server adress (without a trailing slash) and username
-* Run sample by executing ```python sample_file_name.py <server_address> <username>```
+* Run by executing ```python sample_file_name.py <server_address> <username>```
 * Specific information for each sample are included at the top of each file
 * API version is set to 2.2 by default for Tableau server 9.3, but it can be changed in [version.py](./version.py)
 * For Tableau Server 9.0, the REST API namespace must be changed (refer to comment in each sample where namespace, xmlns, is defined)
 
-REST API Examples
+REST API Samples
 ---------------
 These are created and maintained by Tableau.
 
