@@ -1,0 +1,18 @@
+<ivy-module version="2.0">
+    <info organisation="org.tableau" module="tab-documentation-api"/>
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency org="com.google.guava" name="guava" rev="16.0.1"/>
+        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency org="log4j" name="log4j" rev="1.2.17"/>
+        <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-client -->
+        <dependency org="com.sun.jersey" name="jersey-client" rev="1.18.3"/>
+        <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-core -->
+        <dependency org="com.sun.jersey" name="jersey-core" rev="1.18.3"/>
+        <!-- https://mvnrepository.com/artifact/com.sun.jersey.contribs/jersey-multipart -->
+        <dependency org="com.sun.jersey.contribs" name="jersey-multipart" rev="1.18.3"/>
+        <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-server -->
+        <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-server -->
+        <dependency org="com.sun.jersey" name="jersey-server" rev="1.18.3"/>
+    </dependencies>
+</ivy-module>

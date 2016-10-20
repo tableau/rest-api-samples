@@ -1,0 +1,56 @@
+<!--
+ Ant build file for the project jar.
+
+ All functionality comes from the common-module.xml Ant script.
+ Do not add targets or properties here unless they are
+ only specific to this module.
+
+ Note that including the local ant.properties file must
+ happen before importing the common-module.xml to ensure
+ properties are overridden correctly.
+
+ Type "ant -p" to see the list of available targets.
+-->
+<project name="tab-documentation-api" basedir="." default="main" xmlns:ivy="antlib:org.apache.ivy.ant">
+    <property file="ant.properties"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <target name="resolve">
+        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact](-[classifier]).[ext]"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${lib.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java fork="true" classname="${main-class}">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${jar.dir}/${ant.project.name}.jar"/>
+            </classpath>
+        </java>
+    </target>
+
+    <target name="clean-build" depends="clean,jar"/>
+
+    <target name="main" depends="clean,resolve,jar"/>
+</project>
