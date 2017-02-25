@@ -13,11 +13,11 @@
 
 ## Getting started
 
-1. Install the tools listed in the "Required tools" section.
+1. Install the tools listed in the "Requirements" section.
 1. Download the REST API schema and save it in the "res" folder under the folder where this README file is. For more information about the schema, see the following documentation:
 
-   <http://onlinehelp.tsi.lan/current/api/rest_api/en-us/help.htm#REST/rest_api_concepts_schema.htm>
-   
+   <http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm#REST/rest_api_concepts_schema.htm>
+
 1. In the "res" folder, open the "config.properties" file using a text editor.
 1. Modify the configurations as instructed in the file. A sample workbook is already provided with this sample, but you can use any packaged workbook that you want.
 1. Open the following file in a text editor:
@@ -25,17 +25,17 @@
    ```
    src\com\tableausoftware\documentation\api\rest\util\RestApiUtils.java
    ```
-   
+
 1. Find the `getApiUriBuilder()` method, and replace the API URL with the correct version number.
 
    For example, you might see the following URL:
-   
+
    ```
-   /api/2.3/
+   /api/2.5/
    ```
-   
+
    If you want to use version 2.4 of the API, replace the URL with the following:
-   
+
    ```
    /api/2.4/
    ```
