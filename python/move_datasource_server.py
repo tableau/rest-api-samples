@@ -177,6 +177,7 @@ def start_upload_session(server, auth_token, site_id):
     'site_id'       ID of the site that the user is signed into
     Returns a session ID that is used by subsequent functions to identify the upload session.
     """
+    print(auth_token)
     url = server + "/api/{0}/sites/{1}/fileUploads".format(VERSION, site_id)
     server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 201)
@@ -287,7 +288,8 @@ def publish_datasource(server, auth_token, site_id, datasource_filename, dest_pr
     if chunked:
         print("\tPublishing '{0}' in {1}MB chunks (data source over 64MB):".format(datasource_name, CHUNK_SIZE / 1024000))
         # Initiates an upload session
-        upload_id = start_upload_session(server, site_id, auth_token)
+        print(auth_token)
+        upload_id = start_upload_session(server, auth_token, site_id)
 
         # URL for PUT request to append chunks for publishing
         put_url = server + "/api/{0}/sites/{1}/fileUploads/{2}".format(VERSION, site_id, upload_id)
@@ -390,6 +392,7 @@ def main():
 
     ##### STEP 5: Publish to new site #####
     print("\n5. Publishing data source to {0}".format(dest_server))
+    print(dest_auth_token)
     publish_datasource(dest_server, dest_auth_token, dest_site_id, datasource_filename, dest_project_id)
 
     ##### STEP 6: Deleting data source from the source site #####

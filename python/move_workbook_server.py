@@ -292,7 +292,7 @@ def publish_workbook(server, auth_token, site_id, workbook_filename, dest_projec
     if chunked:
         print("\tPublishing '{0}' in {1}MB chunks (workbook over 64MB):".format(workbook_name, CHUNK_SIZE / 1024000))
         # Initiates an upload session
-        upload_id = start_upload_session(server, site_id, auth_token)
+        upload_id = start_upload_session(server, auth_token, site_id)
 
         # URL for PUT request to append chunks for publishing
         put_url = server + "/api/{0}/sites/{1}/fileUploads/{2}".format(VERSION, site_id, upload_id)
