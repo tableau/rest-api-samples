@@ -31,7 +31,7 @@
    For example, you might see the following URL:
 
    ```
-   /api/2.6/
+   /api/2.7/
    ```
 
    If you want to use version 2.4 of the API, replace the URL with the following:
