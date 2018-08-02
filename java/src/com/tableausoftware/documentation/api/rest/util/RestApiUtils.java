@@ -24,6 +24,8 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import com.google.common.io.Files;
 import com.sun.jersey.api.client.Client;
@@ -34,6 +36,7 @@ import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.MultiPart;
 import com.sun.jersey.multipart.MultiPartMediaTypes;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
+import com.tableausoftware.documentation.api.rest.Demo;
 import com.tableausoftware.documentation.api.rest.bindings.CapabilityType;
 import com.tableausoftware.documentation.api.rest.bindings.FileUploadType;
 import com.tableausoftware.documentation.api.rest.bindings.GranteeCapabilitiesType;
@@ -55,6 +58,10 @@ import com.tableausoftware.documentation.api.rest.bindings.WorkbookType;
  * REST API. This class is implemented as a singleton.
  */
 public class RestApiUtils {
+	
+    private static Logger s_logger = Logger.getLogger(Demo.class);
+
+    private static Properties s_properties = new Properties();
 
     private enum Operation {
         ADD_WORKBOOK_PERMISSIONS(getApiUriBuilder().path("sites/{siteId}/workbooks/{workbookId}/permissions")),
@@ -80,6 +87,18 @@ public class RestApiUtils {
 
         String getUrl(Object... values) {
             return m_builder.build(values).toString();
+        }
+    }
+    
+    static {
+        // Configures the logger to log to stdout
+        BasicConfigurator.configure();
+
+        // Loads the values from configuration file into the Properties instance
+        try {
+            s_properties.load(new FileInputStream("res/config.properties"));
+        } catch (IOException e) {
+            s_logger.error("Failed to load configuration files.");
         }
     }
 
@@ -110,7 +129,8 @@ public class RestApiUtils {
      * @return the URI builder
      */
     private static UriBuilder getApiUriBuilder() {
-        return UriBuilder.fromPath(m_properties.getProperty("server.host") + "/api/3.1");
+        String apiVersion = s_properties.getProperty("api.version");
+        return UriBuilder.fromPath(m_properties.getProperty("server.host") + "/api/" + apiVersion);
     }
     /**
      * Initializes the RestApiUtils. The initialize code loads values from the configuration

@@ -20,25 +20,6 @@
 
 1. In the `/res` folder, open the `config.properties` file using a text editor.
 1. Modify the configurations as instructed in the file. A sample workbook is already provided with this sample, but you can use any packaged workbook that you want.
-1. Open the following file in a text editor:
-
-   ```
-   src\com\tableausoftware\documentation\api\rest\util\RestApiUtils.java
-   ```
-
-1. Find the `getApiUriBuilder()` method, and replace the API URL with the correct version number.
-
-   For example, you might see the following URL:
-
-   ```
-   /api/3.1/
-   ```
-
-   If you want to use version 3.0 of the API, replace the URL with the following:
-
-   ```
-   /api/3.0/
-   ```
 
 ## Running the sample
 
