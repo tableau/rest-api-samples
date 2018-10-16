@@ -12,6 +12,14 @@ Running the samples
 * Specific information for each sample are included at the top of each file
 * API version is set to 2.7 by default for Tableau server 10.4, but it can be changed in [version.py](./version.py)
 * For Tableau Server 9.0, the REST API namespace must be changed (refer to comment in each sample where namespace, xmlns, is defined)
+* to use the same server/username/etc without needing the command line, create a file named credentials.py with your values inserted exactly like this:
+```
+SERVER=""
+USERNAME=""
+PASSWORD=""
+SITENAME=""
+```
+
 
 REST API Samples
 ---------------
