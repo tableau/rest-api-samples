@@ -24,15 +24,9 @@ import xml.etree.ElementTree as ET # Contains methods used to build and parse XM
 
 import getpass
 from rest_api_utils import _check_status, ApiCallError, UserDefinedFieldError, _encode_for_display, sign_in, sign_out
+from rest_api_common import get_user_id, get_workbook_id
 
-from rest_api_common import get_project_id
-
-# If using python version 3.x, 'raw_input()' is changed to 'input()'
-if sys.version[0] == '3': raw_input=input
-
-
-
-def move_workbook(server, auth_token, site_id, workbook_id, project_id):
+def rename_workbook(server, auth_token, site_id, workbook_id, new_name):
     """
     Moves the specified workbook to another project.
 
@@ -43,10 +37,9 @@ def move_workbook(server, auth_token, site_id, workbook_id, project_id):
     'project_id'    ID of the project to move workbook into
     """
     url = server + "/api/{0}/sites/{1}/workbooks/{2}".format(VERSION, site_id, workbook_id)
-    # Build the request to move workbook
+    # Build the request to rename workbook
     xml_request = ET.Element('tsRequest')
-    workbook_element = ET.SubElement(xml_request, 'workbook')
-    ET.SubElement(workbook_element, 'project', id=project_id)
+    workbook_element = ET.SubElement(xml_request, 'workbook', name=new_name)
     xml_request = ET.tostring(xml_request)
 
     server_response = requests.put(url, data=xml_request, headers={'x-tableau-auth': auth_token})
@@ -60,32 +53,26 @@ def main():
     username = USERNAME
     password = PASSWORD
     site_id = SITENAME
-    workbook_name = raw_input("\nName of workbook to move: ")
-    dest_project = raw_input("\nDestination project: ")
+    # Fix up the site id and group name - blank indicates default value
+    if site_id == "Default":
+        site_id = ""
+    workbook_name = "z2"
+    new_name = "jac1"
 
-    print("\n*Moving '{0}' workbook to '{1}' project as {2}*".format(workbook_name, dest_project, username))
-    password = getpass.getpass("Password: ")
+    print("\n*Renaming '{0}' workbook to '{1}'*".format(workbook_name, new_name))
 
     ##### STEP 1: Sign in #####
     print("\n1. Signing in as " + username)
-    auth_token, site_id, user_id = sign_in(server, username, password)
+    auth_token, site_id = sign_in(server, username, password, site_id)
+    user_id = get_user_id(server, VERSION, site_id, username, auth_token)
 
-    ##### STEP 2: Find new project id #####
-    print("\n2. Finding project id of '{0}'".format(dest_project))
-    dest_project_id = get_project_id(server, auth_token, site_id, dest_project)
-
-    ##### STEP 3: Find workbook id #####
+   ##### STEP 3: Find workbook id #####
     print("\n3. Finding workbook id of '{0}'".format(workbook_name))
     source_project_id, workbook_id = get_workbook_id(server, auth_token, user_id, site_id, workbook_name)
 
-    # Check if the workbook is already in the desired project
-    if source_project_id == dest_project_id:
-        error = "Workbook already in destination project"
-        raise UserDefinedFieldError(error)
-
     ##### STEP 4: Move workbook #####
-    print("\n4. Moving workbook to '{0}'".format(dest_project))
-    move_workbook(server, auth_token, site_id, workbook_id, dest_project_id)
+    print("\n4. Renaming workbook to '{0}'".format(new_name))
+    rename_workbook(server, auth_token, site_id, workbook_id, new_name)
 
     ##### STEP 5: Sign out #####
     print("\n5. Signing out and invalidating the authentication token")

@@ -1,0 +1,6 @@
+
+**.class
+**.jar
+java/lib/
+**/*.pyc
+credentials.*

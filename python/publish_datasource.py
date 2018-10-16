@@ -81,7 +81,7 @@ def publish_workbook(server, auth_token, site_id, project_id, workbook_file_path
         # Build a general request for publishing
     wb_name = workbook_filename + "5-21-00"
     xml_request = ET.Element('tsRequest')
-    workbook_element = ET.SubElement(xml_request, 'datasource', name=wb_name)
+    workbook_element = ET.SubElement(xml_request, 'workbook', name=wb_name)
     ET.SubElement(workbook_element, 'project', id=project_id)
     connections_element = ET.SubElement(workbook_element, 'connections')
     connection1_element = ET.SubElement(connections_element, 'connection', serverAddress="beta-connectors.tableau.com", serverPort="443")
@@ -167,6 +167,7 @@ def main():
     username = USERNAME
     password = PASSWORD
     site_id = SITENAME
+
     # Fix up the site id and group name - blank indicates default value
     if site_id == "Default":
         site_id = ""
@@ -179,7 +180,7 @@ def main():
     auth_token, site_id = sign_in(server, username, password, site_id)
 
     print("\n2. Finding the project to publish to")
-    project_id = get_project_id(server, auth_token, site_id, "ankim")
+    project_id = get_project_id(server, auth_token, site_id, "Default")
 
     print("\n*Publishing '{0}' to project {1} on '{2}' as {3}*".format(workbook_file_path, project_id, server, username))
     publish_workbook(server, auth_token, site_id, project_id, workbook_file_path)
