@@ -31,13 +31,13 @@
    For example, you might see the following URL:
 
    ```
+   /api/3.2/
+   ```
+
+   If you want to use version 3.1 of the API, replace the URL with the following:
+
+   ```
    /api/3.1/
-   ```
-
-   If you want to use version 3.0 of the API, replace the URL with the following:
-
-   ```
-   /api/3.0/
    ```
 
 ## Running the sample
