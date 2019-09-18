@@ -110,7 +110,7 @@ public class RestApiUtils {
      * @return the URI builder
      */
     private static UriBuilder getApiUriBuilder() {
-        return UriBuilder.fromPath(m_properties.getProperty("server.host") + "/api/3.4");
+        return UriBuilder.fromPath(m_properties.getProperty("server.host") + "/api/3.5");
     }
     /**
      * Initializes the RestApiUtils. The initialize code loads values from the configuration
