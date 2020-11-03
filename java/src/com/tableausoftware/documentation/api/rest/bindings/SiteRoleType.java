@@ -23,10 +23,16 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;simpleType name="siteRoleType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="Guest"/>
+ *     &lt;enumeration value="Creator"/>
+ *     &lt;enumeration value="Explorer"/>
+ *     &lt;enumeration value="ExplorerCanPublish"/>
+ *     &lt;enumeration value="ReadOnly"/>
  *     &lt;enumeration value="Interactor"/>
  *     &lt;enumeration value="Publisher"/>
  *     &lt;enumeration value="ServerAdministrator"/>
  *     &lt;enumeration value="SiteAdministrator"/>
+ *     &lt;enumeration value="SiteAdministratorCreator"/>
+ *     &lt;enumeration value="SiteAdministratorExplorer"/>
  *     &lt;enumeration value="Unlicensed"/>
  *     &lt;enumeration value="UnlicensedWithPublish"/>
  *     &lt;enumeration value="Viewer"/>
@@ -42,6 +48,14 @@ public enum SiteRoleType {
 
     @XmlEnumValue("Guest")
     GUEST("Guest"),
+    @XmlEnumValue("Creator")
+    CREATOR("Creator"),
+    @XmlEnumValue("Explorer")
+    EXPLORER("Explorer"),
+    @XmlEnumValue("ExplorerCanPublish")
+    EXPLORERCANPUBLISH("ExplorerCanPublish"),
+    @XmlEnumValue("ReadOnly")
+    READONLY("ReadOnly"),
     @XmlEnumValue("Interactor")
     INTERACTOR("Interactor"),
     @XmlEnumValue("Publisher")
@@ -50,6 +64,10 @@ public enum SiteRoleType {
     SERVER_ADMINISTRATOR("ServerAdministrator"),
     @XmlEnumValue("SiteAdministrator")
     SITE_ADMINISTRATOR("SiteAdministrator"),
+    @XmlEnumValue("SiteAdministratorCreator")
+    SITE_ADMINISTRATOR_CREATOR("SiteAdministratorCreator"),
+    @XmlEnumValue("SiteAdministratorExplorer")
+    SITE_ADMINISTRATOR_EXPLORER("SiteAdministratorExplorer"),
     @XmlEnumValue("Unlicensed")
     UNLICENSED("Unlicensed"),
     @XmlEnumValue("UnlicensedWithPublish")
