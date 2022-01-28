@@ -29,6 +29,9 @@ from version import VERSION
 # or 'http://tableau.com/api' for Tableau Server 9.1 or later
 XMLNS = {'t': 'http://tableau.com/api'}
 
+# If using python version 3.x, 'raw_input()' is changed to 'input()'
+if sys.version[0] == '3': raw_input=input
+
 class ApiCallError(Exception):
     """ ApiCallError """
     pass
@@ -197,11 +200,11 @@ def main():
 
     """
     # To automate the script fill in these fields
-    server = "http://localhost"
+    server = ""
     username = ""
     password = ""
-    site_id = "Default"
-    group_name = "All"
+    site_id = ""
+    group_name = ""
     page_size = 100
 
     if len(sys.argv) > 1:
@@ -239,7 +242,7 @@ def main():
     if group_name == "All":
         group_name = ""
 
-    print "\nSigning in to obtain authentication token"
+    print("\nSigning in to obtain authentication token")
     auth_token, site_id = sign_in(server, username, password, site_id)
 
     total_available = 0
@@ -257,21 +260,21 @@ def main():
         group_id = group.get('id')
         total_available = get_users_in_group_count(server, auth_token, site_id, group_id)
 
-        if group_name <> "" and group.get('name') <> group_name:
+        if group_name != "" and group.get('name') != group_name:
             continue
 
-        print "\nPrinting " + str(total_available) + ' users from the group: ' + group.get('name')
+        print("\nPrinting " + str(total_available) + ' users from the group: ' + group.get('name'))
         while not done:
             users = get_users_in_group(server, auth_token, site_id, group_id, page_size, counter)
             counter += 1
             for user in users:
-                print user.get('name') 
+                print(user.get('name'))
 
             total_returned = total_returned + page_size
             if total_returned >= total_available:
                 done = True
 
-    print "\nSigning out and invalidating the authentication token"
+    print("\nSigning out and invalidating the authentication token")
     sign_out(server, auth_token)
 
 if __name__ == "__main__":
