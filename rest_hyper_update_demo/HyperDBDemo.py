@@ -5,8 +5,9 @@ import xml.etree.ElementTree as ET
 import sys
 import math
 import os
-from requests.packages.urllib3.fields import RequestField
-from requests.packages.urllib3.filepost import encode_multipart_formdata
+import urllib3
+from urllib3.fields import RequestField
+from urllib3.filepost import encode_multipart_formdata
 # generate random integer values
 from random import seed
 from random import randint
@@ -290,7 +291,7 @@ def initiate_file_upload(server, site_id, auth_token):
 
 def get_datasource_id(server, auth_token, site_id, datasource_name):
     url = server + "/api/{0}/sites/{1}/datasources?filter=name:eq:{2}".format(VERSION, site_id,datasource_name)
-        # print("Data source id URL: " +url)
+    print("Data source id URL: " +url)
     server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
         # print (server_response)
     _check_status(server_response, 200)
@@ -431,7 +432,7 @@ def main():
      patSecret = '{{YOUR_PAT_SECRET}}'
      site = '{{YOUR_SITE_NAME}}'
      project_name = '{{YOUR_PROJECT_NAME}}'
-     workbook_name = '{{YOUR_WORKBOOK_NAME}}'
+     workbook_name = 'RESTHyperUpdateDemo'
      datasource_name = 'HyperDBDemo_SalesData'
      delta_datasource ="demo_delta_source_data.csv"
 
