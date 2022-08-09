@@ -85,8 +85,10 @@ public class RestApiUtils {
 
     // The only instance of the RestApiUtils
     private static RestApiUtils INSTANCE = null;
-    private static Marshaller s_jaxbMarshaller;
-    private static Unmarshaller s_jaxbUnmarshaller;
+    
+    private static JAXBContext jaxbContext;
+    
+    private static Schema schema;
 
     private static Properties m_properties = new Properties();
     /**
@@ -119,18 +121,36 @@ public class RestApiUtils {
     private static void initialize() {
         try {
             m_properties.load(new FileInputStream("res/config.properties"));
-            JAXBContext jaxbContext = JAXBContext.newInstance(TsRequest.class, TsResponse.class);
+            jaxbContext = JAXBContext.newInstance(TsRequest.class, TsResponse.class);
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = schemaFactory.newSchema(new File(m_properties.getProperty("server.schema.location")));
-            s_jaxbMarshaller = jaxbContext.createMarshaller();
-            s_jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            s_jaxbUnmarshaller.setSchema(schema);
-            s_jaxbMarshaller.setSchema(schema);
+            schema = schemaFactory.newSchema(new File(m_properties.getProperty("server.schema.location")));
         } catch (JAXBException | SAXException | IOException ex) {
             throw new IllegalStateException("Failed to initialize the REST API");
         }
     }
 
+    private Marshaller getMarshallerInstance(){
+        Marshaller marshaller;
+        try {
+            marshaller = jaxbContext.createMarshaller();
+            marshaller.setSchema(schema);
+        } catch (JAXBException ex) {
+            throw new IllegalStateException("Failed to get new instance of marshaller");
+        }
+        return marshaller;
+    }
+
+    private Unmarshaller getUnmarshallerInstance(){
+        Unmarshaller unmarshaller;
+        try {
+            unmarshaller = jaxbContext.createUnmarshaller();
+            unmarshaller.setSchema(schema);
+        } catch (JAXBException ex) {
+            throw new IllegalStateException("Failed to get new instance of unmarshaller");
+        }
+        return unmarshaller;
+    }
+    
     private final String TABLEAU_AUTH_HEADER = "X-Tableau-Auth";
 
     private final String TABLEAU_PAYLOAD_NAME = "request_payload";
@@ -801,7 +821,7 @@ public class RestApiUtils {
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload");
             }
@@ -850,7 +870,7 @@ public class RestApiUtils {
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload");
             }
@@ -910,7 +930,7 @@ public class RestApiUtils {
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload");
             }
@@ -960,7 +980,7 @@ public class RestApiUtils {
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload");
             }
@@ -1016,7 +1036,7 @@ public class RestApiUtils {
             // Creates a StringReader instance to store the response and then
             // unmarshals the response into a TsResponse object
             StringReader reader = new StringReader(responseXML);
-            tsResponse = s_jaxbUnmarshaller.unmarshal(new StreamSource(reader), TsResponse.class).getValue();
+            tsResponse = getUnmarshallerInstance().unmarshal(new StreamSource(reader), TsResponse.class).getValue();
         } catch (JAXBException e) {
             m_logger.error("Failed to parse response from server due to:");
             e.printStackTrace();
