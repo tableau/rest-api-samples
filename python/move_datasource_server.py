@@ -1,19 +1,19 @@
 ####
-# This script contains functions that move a specified workbook from
+# This script contains functions that move a specified data source from
 # one server to another server's 'default' project.
 #
 # To run the script, you must have installed Python 2.7.9 or later,
 # plus the 'requests' library:
 #   http://docs.python-requests.org/en/latest/
 #
-# The script takes in the server address and username as arguments,
+# The script takes in the source server address and username as arguments,
 # where the server address has no trailing slash (e.g. http://localhost).
 # Run the script in terminal by entering:
-#   python publish_sample.py <server_address> <username>
+#   python move_datasource_server.py <server_address> <username>
 #
 # When running the script, it will prompt for the following:
-# 'Name of workbook to move':        Enter name of workbook to move
-# 'Destination server':              Enter name of server to move workbook into
+# 'Name of data source to move':     Enter name of data source to move
+# 'Destination server':              Enter name of server to move data source into
 # 'Destination server username':     Enter username to sign into destination server
 # 'Password for source server':      Enter password to sign into source server
 # 'Password for destination server': Enter password to sign into destination server
@@ -34,8 +34,8 @@ from requests.packages.urllib3.fields import RequestField
 from requests.packages.urllib3.filepost import encode_multipart_formdata
 
 #####
-# Move a specified workbook from a source server to a specified
-# server's 'default' project by downloading workbook to a temp file.
+# Move a specified data source from a source server to a specified
+# server's 'default' project by downloading data source to a temp file.
 #####
 
 # The namespace for the REST API is 'http://tableausoftware.com/api' for Tableau Server 9.0
@@ -45,7 +45,7 @@ xmlns = {'t': 'http://tableau.com/api'}
 # The maximum size of a file that can be published in a single request is 64MB
 FILESIZE_LIMIT = 1024 * 1024 * 64   # 64MB
 
-# For when a workbook is over 64MB, break it into 5MB(standard chunk size) chunks
+# For when a data source is over 64MB, break it into 5MB (standard chunk size) chunks
 CHUNK_SIZE = 1024 * 1024 * 5    # 5MB
 
 # If using python version 3.x, 'raw_input()' is changed to 'input()'
@@ -168,7 +168,6 @@ def sign_out(server, auth_token):
     _check_status(server_response, 204)
     return
 
-
 def start_upload_session(server, auth_token, site_id):
     """
     Creates a POST request that initiates a file upload session.
@@ -178,36 +177,35 @@ def start_upload_session(server, auth_token, site_id):
     'site_id'       ID of the site that the user is signed into
     Returns a session ID that is used by subsequent functions to identify the upload session.
     """
+    print(auth_token)
     url = server + "/api/{0}/sites/{1}/fileUploads".format(VERSION, site_id)
     server_response = requests.post(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 201)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
     return xml_response.find('t:fileUpload', namespaces=xmlns).get('uploadSessionId')
 
-
-def get_workbook_id(server, auth_token, user_id, site_id, workbook_name):
+def get_datasource_id(server, auth_token, site_id, datasource_name):
     """
-    Gets the id of the desired workbook to relocate.
+    Gets the id of the desired data source to relocate.
 
-    'server'        specified server address
-    'auth_token'    authentication token that grants user access to API calls
-    'user_id'       ID of user with access to workbook
-    'site_id'       ID of the site that the user is signed into
-    'workbook_name' name of workbook to get ID of
-    Returns the workbook id and the project id that contains the workbook.
+    'server'            specified server address
+    'auth_token'        authentication token that grants user access to API calls
+    'user_id'           ID of user with access to data source
+    'site_id'           ID of the site that the user is signed into
+    'datasource_name'   name of data source to get ID of
+    Returns the data source id and the project id that contains the data source.
     """
-    url = server + "/api/{0}/sites/{1}/users/{2}/workbooks".format(VERSION, site_id, user_id)
+    url = server + "/api/{0}/sites/{1}/datasources".format(VERSION, site_id)
     server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
     xml_response = ET.fromstring(_encode_for_display(server_response.text))
 
-    workbooks = xml_response.findall('.//t:workbook', namespaces=xmlns)
-    for workbook in workbooks:
-        if workbook.get('name') == workbook_name:
-            return workbook.get('id')
-    error = "Workbook named '{0}' not found.".format(workbook_name)
+    datasources = xml_response.findall('.//t:datasource', namespaces=xmlns)
+    for datasource in datasources:
+        if datasource.get('name') == datasource_name:
+            return datasource.get('id')
+    error = "Data source named '{0}' not found.".format(datasource_name)
     raise LookupError(error)
-
 
 def get_default_project_id(server, auth_token, site_id):
     """
@@ -240,65 +238,64 @@ def get_default_project_id(server, auth_token, site_id):
         xml_response = ET.fromstring(_encode_for_display(server_response.text))
         projects.extend(xml_response.findall('.//t:project', namespaces=xmlns))
 
-    # Look through all projects to find the 'default' one
+    # Look through all projects to find the 'default' one (EN and DE locales)
     for project in projects:
-        if project.get('name') == 'default' or project.get('name') == 'Default':
+        if project.get('name') == 'default' or project.get('name') == 'Default' or project.get('name') == 'standard' or project.get('name') == 'Standard':
             return project.get('id')
     print("\tProject named 'default' was not found in {0}".format(server))
 
-
-def download(server, auth_token, site_id, workbook_id):
+def download(server, auth_token, site_id, datasource_id):
     """
-    Downloads the desired workbook from the server (temp-file).
+    Downloads the desired data source from the server (temp-file).
 
-    'server'        specified server address
-    'auth_token'    authentication token that grants user access to API calls
-    'site_id'       ID of the site that the user is signed into
-    'workbook_id'   ID of the workbook to download
-    Returns the filename of the workbook downloaded.
+    'server'          specified server address
+    'auth_token'      authentication token that grants user access to API calls
+    'site_id'         ID of the site that the user is signed into
+    'datasource_id'   ID of the data soutce to download
+    Returns the filename of the data source downloaded.
     """
-    print("\tDownloading workbook to a temp file")
-    url = server + "/api/{0}/sites/{1}/workbooks/{2}/content".format(VERSION, site_id, workbook_id)
+    print("\tDownloading data source to a temp file")
+    url = server + "/api/{0}/sites/{1}/datasources/{2}/content".format(VERSION, site_id, datasource_id)
     server_response = requests.get(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 200)
 
-    # Header format: Content-Disposition: name="tableau_workbook"; filename="workbook-filename"
+    # Header format: Content-Disposition: name="tableau_datasource"; filename="datasource-filename"
     filename = re.findall(r'filename="(.*)"', server_response.headers['Content-Disposition'])[0]
     with open(filename, 'wb') as f:
         f.write(server_response.content)
     return filename
 
-
-def publish_workbook(server, auth_token, site_id, workbook_filename, dest_project_id):
+def publish_datasource(server, auth_token, site_id, datasource_filename, dest_project_id):
     """
-    Publishes the workbook to the desired project.
+    Publishes the data source to the desired project.
 
-    'server'            specified server address
-    'auth_token'        authentication token that grants user access to API calls
-    'site_id'           ID of the site that the user is signed into
-    'workbook_filename' filename of workbook to publish
-    'dest_project_id'   ID of peoject to publish to
+    'server'               specified server address
+    'auth_token'           authentication token that grants user access to API calls
+    'site_id'              ID of the site that the user is signed into
+    'datasource_filename'  filename of data source to publish
+    'dest_project_id'      ID of peoject to publish to
     """
-    workbook_name, file_extension = workbook_filename.split('.', 1)
-    workbook_size = os.path.getsize(workbook_filename)
-    chunked = workbook_size >= FILESIZE_LIMIT
+    datasource_name, file_extension = datasource_filename.split('.', 1)
+    datasource_size = os.path.getsize(datasource_filename)
+    chunked = datasource_size >= FILESIZE_LIMIT
 
     # Build a general request for publishing
     xml_request = ET.Element('tsRequest')
-    workbook_element = ET.SubElement(xml_request, 'workbook', name=workbook_name)
-    ET.SubElement(workbook_element, 'project', id=dest_project_id)
+    datasource_element = ET.SubElement(xml_request, 'datasource', name=datasource_name)
+    ET.SubElement(datasource_element, 'project', id=dest_project_id)
     xml_request = ET.tostring(xml_request)
 
     if chunked:
-        print("\tPublishing '{0}' in {1}MB chunks (workbook over 64MB):".format(workbook_name, CHUNK_SIZE / 1024000))
+        print("\tPublishing '{0}' in {1}MB chunks (data source over 64MB):".format(datasource_name, CHUNK_SIZE / 1024000))
         # Initiates an upload session
+        print(auth_token)
         upload_id = start_upload_session(server, auth_token, site_id)
 
         # URL for PUT request to append chunks for publishing
         put_url = server + "/api/{0}/sites/{1}/fileUploads/{2}".format(VERSION, site_id, upload_id)
 
-        # Reads and uploads chunks of the workbook
-        with open(workbook_filename, 'rb') as f:
+        # Reads and uploads chunks of the data source
+        with open(datasource_filename, 'rb') as f:
             while True:
                 data = f.read(CHUNK_SIZE)
                 if not data:
@@ -313,23 +310,23 @@ def publish_workbook(server, auth_token, site_id, workbook_filename, dest_projec
         # Finish building request for chunking method
         payload, content_type = _make_multipart({'request_payload': ('', xml_request, 'text/xml')})
 
-        publish_url = server + "/api/{0}/sites/{1}/workbooks".format(VERSION, site_id)
+        publish_url = server + "/api/{0}/sites/{1}/datasources".format(VERSION, site_id)
         publish_url += "?uploadSessionId={0}".format(upload_id)
-        publish_url += "&workbookType={0}&overwrite=true".format(file_extension)
+        publish_url += "&datasourceType={0}&overwrite=true".format(file_extension)
     else:
-        print("\tPublishing '{0}' using the all-in-one method (workbook under 64MB)".format(workbook_name))
+        print("\tPublishing '{0}' using the all-in-one method (data source under 64MB)".format(datasource_name))
 
         # Read the contents of the file to publish
-        with open(workbook_filename, 'rb') as f:
-            workbook_bytes = f.read()
+        with open(datasource_filename, 'rb') as f:
+            datasource_bytes = f.read()
 
         # Finish building request for all-in-one method
         parts = {'request_payload': ('', xml_request, 'text/xml'),
-                 'tableau_workbook': (workbook_filename, workbook_bytes, 'application/octet-stream')}
+                 'tableau_datasource': (datasource_filename, datasource_bytes, 'application/octet-stream')}
         payload, content_type = _make_multipart(parts)
 
-        publish_url = server + "/api/{0}/sites/{1}/workbooks".format(VERSION, site_id)
-        publish_url += "?workbookType={0}&overwrite=true".format(file_extension)
+        publish_url = server + "/api/{0}/sites/{1}/datasources".format(VERSION, site_id)
+        publish_url += "?datasourceType={0}&overwrite=true".format(file_extension)
 
     # Make the request to publish and check status code
     print("\tUploading...")
@@ -337,24 +334,23 @@ def publish_workbook(server, auth_token, site_id, workbook_filename, dest_projec
                                     headers={'x-tableau-auth': auth_token, 'content-type': content_type})
     _check_status(server_response, 201)
 
-
-def delete_workbook(server, auth_token, site_id, workbook_id, workbook_filename):
+def delete_datasource(server, auth_token, site_id, datasource_id, datasource_filename):
     """
-    Deletes the temp workbook file, and workbook from the source project.
+    Deletes the temp data source file, and data source from the source project.
 
-    'server'            specified server address
-    'auth_token'        authentication token that grants user access to API calls
-    'site_id'           ID of the site that the user is signed into
-    'workbook_id'       ID of workbook to delete
-    'workbook_filename' filename of temp workbook file to delete
+    'server'               specified server address
+    'auth_token'           authentication token that grants user access to API calls
+    'site_id'              ID of the site that the user is signed into
+    'datasource_id'        ID of data source to delete
+    'datasource_filename'  filename of temp data source file to delete
     """
-    # Builds the request to delete workbook from the source project on server
-    url = server + "/api/{0}/sites/{1}/workbooks/{2}".format(VERSION, site_id, workbook_id)
+    # Builds the request to delete data source from the source project on server
+    url = server + "/api/{0}/sites/{1}/datasources/{2}".format(VERSION, site_id, datasource_id)
     server_response = requests.delete(url, headers={'x-tableau-auth': auth_token})
     _check_status(server_response, 204)
 
     # Remove the temp file created for the download
-    os.remove(workbook_filename)
+    os.remove(datasource_filename)
 
 
 def main():
@@ -364,41 +360,44 @@ def main():
         raise UserDefinedFieldError(error)
     source_server = sys.argv[1]
     source_username = sys.argv[2]
-    workbook_name = raw_input("\nName of workbook to move: ")
+    datasource_name = raw_input("\nName of data source to move: ")
+    source_site = raw_input("\nSource server site name: ")
     dest_server = raw_input("\nDestination server: ")
     dest_username = raw_input("\nDestination server username: ")
-
-    print("\n*Moving '{0}' workbook to the 'default' project in {1}*".format(workbook_name, dest_server))
+    dest_site = raw_input("\nDestination server site name: ")
+    
+    print("\n*Moving '{0}' data source to the 'default' project in {1}*".format(datasource_name, dest_server))
     source_password = getpass.getpass("Password for {0} on {1}: ".format(source_username, source_server))
     dest_password = getpass.getpass("Password for {0} on {1}: ".format(dest_username, dest_server))
 
     ##### STEP 1: Sign in #####
     print("\n1. Signing in to both sites to obtain authentication tokens")
-    # Source server
-    source_auth_token, source_site_id, source_user_id = sign_in(source_server, source_username, source_password)
+    # Source server (site "RESTTest")
+    source_auth_token, source_site_id, source_user_id = sign_in(source_server, source_username, source_password, source_site)
 
-    # Destination server
-    dest_auth_token, dest_site_id, dest_user_id = sign_in(dest_server, dest_username, dest_password)
+    # Destination server (site "KonstantinsLiebewiese")
+    dest_auth_token, dest_site_id, dest_user_id = sign_in(dest_server, dest_username, dest_password, dest_site)
 
-    ##### STEP 2: Find workbook id #####
-    print("\n2. Finding workbook id of '{0}'".format(workbook_name))
-    workbook_id = get_workbook_id(source_server, source_auth_token, source_user_id, source_site_id, workbook_name)
-
+    ##### STEP 2: Find data source id #####
+    print("\n2. Finding data source id of '{0}'".format(datasource_name))
+    datasource_id = get_datasource_id(source_server, source_auth_token, source_site_id, datasource_name)
+    
     ##### STEP 3: Find 'default' project id for destination server #####
     print("\n3. Finding 'default' project id for {0}".format(dest_server))
     dest_project_id = get_default_project_id(dest_server, dest_auth_token, dest_site_id)
 
-    ##### STEP 4: Download workbook #####
-    print("\n4. Downloading the workbook to move")
-    workbook_filename = download(source_server, source_auth_token, source_site_id, workbook_id)
+    ##### STEP 4: Download data source #####
+    print("\n4. Downloading the data source to move")
+    datasource_filename = download(source_server, source_auth_token, source_site_id, datasource_id)
 
     ##### STEP 5: Publish to new site #####
-    print("\n5. Publishing workbook to {0}".format(dest_server))
-    publish_workbook(dest_server, dest_auth_token, dest_site_id, workbook_filename, dest_project_id)
+    print("\n5. Publishing data source to {0}".format(dest_server))
+    print(dest_auth_token)
+    publish_datasource(dest_server, dest_auth_token, dest_site_id, datasource_filename, dest_project_id)
 
-    ##### STEP 6: Deleting workbook from the source site #####
-    print("\n6. Deleting workbook from the original site and temp file")
-    delete_workbook(source_server, source_auth_token, source_site_id, workbook_id, workbook_filename)
+    ##### STEP 6: Deleting data source from the source site #####
+    print("\n6. Deleting data source from the original site and temp file")
+    delete_datasource(source_server, source_auth_token, source_site_id, datasource_id, datasource_filename)
 
     ##### STEP 7: Sign out #####
     print("\n7. Signing out and invalidating the authentication token")
