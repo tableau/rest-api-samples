@@ -19,3 +19,4 @@ Getting Started
 * Use 'Issues' to note any bugs or to request new samples.
 * Let us know if you have samples of your own you'd like to share.
 
+Note: the Java samples are written for Java 8, and will not run against Java 11 or Java 13. We do plan to update them, but if you send a PR that would also be welome!
