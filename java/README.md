@@ -21,6 +21,7 @@
 1. In the `/res` folder, open the `config.properties` file using a text editor.
 1. Modify the configurations as instructed in the file. A sample workbook is already provided with this sample, but you can use any packaged workbook that you want.
 
+
 ## Running the sample
 
 1. Make sure that Tableau Server is running.

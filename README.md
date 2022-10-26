@@ -1,6 +1,6 @@
 
 # rest-api-samples
-This repository contains Python and Java samples for the Tableau REST API. For instructions on running the samples, see the Readme files in the python and java directories.
+This repository contains Python and Java samples for the Tableau REST API, as well as [Postman collections](https://www.postman.com/) that can be called against the REST API. For instructions on running the samples, see the Readme files in each directory.
 
 Official developer docs for the REST API can be found [here](http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm).
 

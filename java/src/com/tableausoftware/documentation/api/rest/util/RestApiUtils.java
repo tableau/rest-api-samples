@@ -131,6 +131,7 @@ public class RestApiUtils {
     private static UriBuilder getApiUriBuilder() {
         String apiVersion = s_properties.getProperty("api.version");
         return UriBuilder.fromPath(m_properties.getProperty("server.host") + "/api/" + apiVersion);
+
     }
     /**
      * Initializes the RestApiUtils. The initialize code loads values from the configuration
@@ -698,8 +699,8 @@ public class RestApiUtils {
 
         // Builds the URL with the upload session id and workbook type
         UriBuilder builder = Operation.PUBLISH_WORKBOOK.getUriBuilder()
-                .queryParam("uploadSessionId", fileUpload.getUploadSessionId())
-                .queryParam("workbookType", Files.getFileExtension(workbookFile.getName()));
+                .replaceQueryParam("uploadSessionId", fileUpload.getUploadSessionId())
+                .replaceQueryParam("workbookType", Files.getFileExtension(workbookFile.getName()));
         String url = builder.build(siteId, fileUpload.getUploadSessionId()).toString();
 
         // Creates a buffer to read 100KB at a time
