@@ -1,8 +1,13 @@
 
 # rest-api-samples
+[![Tableau Supported](https://img.shields.io/badge/Support%20Level-Tableau%20Supported-53bd92.svg)](https://www.tableau.com/support-levels-it-and-developer-tools)
+
 This repository contains Python and Java samples for the Tableau REST API, as well as [Postman collections](https://www.postman.com/) that can be called against the REST API. For instructions on running the samples, see the Readme files in each directory.
 
-Official developer docs for the REST API can be found [here](http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm).
+Other references
+- [Developer docs for the REST API](http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm).
+- [Tableau python library for the REST API](https://github.com/tableau/server-client-python) (includes samples showing how to use the library)
+- [Samples for the Metadata API](https://github.com/tableau/metadata-api-samples)
 
 Getting Started
 ---------------
