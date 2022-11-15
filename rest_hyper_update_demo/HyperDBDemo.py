@@ -427,14 +427,24 @@ def upsert(server, auth_token, site_id, datasource_name):
     _check_status(server_response, 202)    
     
 def main():
-     server = '{{YOUR_SERVER_ADDRESS}}'
-     patName = '{{YOUR_PAT_NAME}}'
-     patSecret = '{{YOUR_PAT_SECRET}}'
-     site = '{{YOUR_SITE_NAME}}'
-     project_name = '{{YOUR_PROJECT_NAME}}'
+    #  server = '{{YOUR_SERVER_ADDRESS}}'
+    #  patName = '{{YOUR_PAT_NAME}}'
+    #  patSecret = '{{YOUR_PAT_SECRET}}'
+    #  site = '{{YOUR_SITE_NAME}}'
+    #  project_name = '{{YOUR_PROJECT_NAME}}'
+    #  workbook_name = 'RESTHyperUpdateDemo'
+    #  datasource_name = 'HyperDBDemo_SalesData'
+    #  delta_datasource ="demo_delta_source_data.csv"
+
+     server = 'https://us-west-2a.online.tableau.com'
+     patName = 'dz431'
+     patSecret = 'Smek2PKRTryvotHJV/vUNg==:nIkoHkiq50CypHqeSN0Y1RDxx95YygvL'
+     site = 'alpodev'
+     project_name = 'Testing'
      workbook_name = 'RESTHyperUpdateDemo'
      datasource_name = 'HyperDBDemo_SalesData'
      delta_datasource ="demo_delta_source_data.csv"
+
 
      if (sys.argv[1] == 'CREATE'):
 
