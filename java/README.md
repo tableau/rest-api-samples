@@ -2,7 +2,7 @@
 ## Requirements
 
 * Tableau Server
-* Java SDK
+* Java SDK 8
   * Download: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
 * Apache Ant
   * It is not neccessary to run the "Optional" steps in the Apache Ant guide.
