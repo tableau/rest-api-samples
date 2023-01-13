@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.tableausoftware.documentation.api.rest.bindings.GranteeCapabilitiesType;
 import com.tableausoftware.documentation.api.rest.bindings.GroupType;
@@ -38,15 +38,16 @@ import com.tableausoftware.documentation.api.rest.util.RestApiUtils;
  */
 public class Demo {
 
-    private static Logger s_logger = Logger.getLogger(Demo.class);
+    private static Logger s_logger = LogManager.getLogger();
 
     private static Properties s_properties = new Properties();
 
     private static final RestApiUtils s_restApiUtils = RestApiUtils.getInstance();
 
     static {
-        // Configures the logger to log to stdout
-        BasicConfigurator.configure();
+        org.apache.logging.log4j.core.config.Configurator.setAllLevels(
+                LogManager.getRootLogger().getName(), org.apache.logging.log4j.Level.ALL);
+        s_logger.info("Configuring...");
 
         // Loads the values from configuration file into the Properties instance
         try {
@@ -57,6 +58,7 @@ public class Demo {
     }
 
     public static void main(String[] args) {
+        s_logger.info("Running...");
         // Sets the username, password, and content URL, which are all required
         // in the payload of a Sign In request
         String username = s_properties.getProperty("user.admin.name");
@@ -65,6 +67,11 @@ public class Demo {
 
         // Signs in to server and saves the authentication token, site ID, and current user ID
         TableauCredentialsType credential = s_restApiUtils.invokeSignIn(username, password, contentUrl);
+
+        if (credential == null || credential.getSite() == null || credential.getToken() == null){
+            s_logger.error("Failed to sign in: null or invalid credential returned");
+            return;
+        }
         String currentSiteId = credential.getSite().getId();
         String currentUserId = credential.getUser().getId();
 

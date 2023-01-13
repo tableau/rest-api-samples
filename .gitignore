@@ -1,0 +1,4 @@
+*.pyc
+/java/build/*
+/java/.idea/*
+/java/lib/*
