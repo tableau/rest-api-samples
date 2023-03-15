@@ -2,6 +2,8 @@
 
 This repo contains Postman collection content for accessing Webhooks methods in the Tableau REST API.
 
+> NOTE: See **[tableau-postman](https://github.com/tableau/tableau-postman/blob/main/README.md)** for a comprehensive Postman collection for the entire Tableau REST API. 
+
 To learn more about the Webhooks feature, see the Tableau Webhooks documentation:
 
 - [Developer guide](https://help.tableau.com/current/developer/webhooks/en-us/)
