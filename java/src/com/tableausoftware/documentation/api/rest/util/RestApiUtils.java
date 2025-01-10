@@ -86,8 +86,10 @@ public class RestApiUtils {
 
     // The only instance of the RestApiUtils
     private static RestApiUtils INSTANCE = null;
-    private static Marshaller s_jaxbMarshaller;
-    private static Unmarshaller s_jaxbUnmarshaller;
+    
+    private static JAXBContext jaxbContext;
+    
+    private static Schema schema;
 
     private static Properties m_properties = new Properties();
     /**
@@ -145,10 +147,33 @@ public class RestApiUtils {
             s_jaxbMarshaller.setSchema(schema);
         } catch (JAXBException ex) {
             throw new IllegalStateException("Failed to initialize the REST API with schema", ex);
+
         }
         m_logger.info("Schema initialization complete");
     }
 
+    private Marshaller getMarshallerInstance(){
+        Marshaller marshaller;
+        try {
+            marshaller = jaxbContext.createMarshaller();
+            marshaller.setSchema(schema);
+        } catch (JAXBException ex) {
+            throw new IllegalStateException("Failed to get new instance of marshaller");
+        }
+        return marshaller;
+    }
+
+    private Unmarshaller getUnmarshallerInstance(){
+        Unmarshaller unmarshaller;
+        try {
+            unmarshaller = jaxbContext.createUnmarshaller();
+            unmarshaller.setSchema(schema);
+        } catch (JAXBException ex) {
+            throw new IllegalStateException("Failed to get new instance of unmarshaller");
+        }
+        return unmarshaller;
+    }
+    
     private final String TABLEAU_AUTH_HEADER = "X-Tableau-Auth";
 
     private final String TABLEAU_PAYLOAD_NAME = "request_payload";
@@ -696,8 +721,8 @@ public class RestApiUtils {
 
         // Builds the URL with the upload session id and workbook type
         UriBuilder builder = Operation.PUBLISH_WORKBOOK.getUriBuilder()
-                .queryParam("uploadSessionId", fileUpload.getUploadSessionId())
-                .queryParam("workbookType", Files.getFileExtension(workbookFile.getName()));
+                .replaceQueryParam("uploadSessionId", fileUpload.getUploadSessionId())
+                .replaceQueryParam("workbookType", Files.getFileExtension(workbookFile.getName()));
         String url = builder.build(siteId, fileUpload.getUploadSessionId()).toString();
 
         // Creates a buffer to read 100KB at a time
@@ -821,7 +846,7 @@ public class RestApiUtils {
             StringWriter writer = new StringWriter();
 
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload: " + ex);
                 m_logger.error("Not posting to " + url);
@@ -870,7 +895,7 @@ public class RestApiUtils {
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload");
             }
@@ -930,7 +955,7 @@ public class RestApiUtils {
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload");
             }
@@ -980,7 +1005,7 @@ public class RestApiUtils {
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
             try {
-                s_jaxbMarshaller.marshal(requestPayload, writer);
+                getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
                 m_logger.error("There was a problem marshalling the payload");
             }
@@ -1036,7 +1061,7 @@ public class RestApiUtils {
             // Creates a StringReader instance to store the response and then
             // unmarshals the response into a TsResponse object
             StringReader reader = new StringReader(responseXML);
-            tsResponse = s_jaxbUnmarshaller.unmarshal(new StreamSource(reader), TsResponse.class).getValue();
+            tsResponse = getUnmarshallerInstance().unmarshal(new StreamSource(reader), TsResponse.class).getValue();
         } catch (JAXBException e) {
             m_logger.error("Failed to parse response from server due to:" + e.toString());
             // if more information is needed
