@@ -1,18 +1,11 @@
 <!--
  Ant build file for the project jar.
-
- All functionality comes from the common-module.xml Ant script.
- Do not add targets or properties here unless they are
- only specific to this module.
-
- Note that including the local ant.properties file must
- happen before importing the common-module.xml to ensure
- properties are overridden correctly.
-
- Type "ant -p" to see the list of available targets.
 -->
 <project name="tab-documentation-api" basedir="." default="main" xmlns:ivy="antlib:org.apache.ivy.ant">
     <property file="ant.properties"/>
+    <presetdef name="javac">
+        <javac includeantruntime="false" />
+    </presetdef>
 
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>

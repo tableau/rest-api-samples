@@ -6,7 +6,8 @@
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency org="com.google.guava" name="guava" rev="16.0.1"/>
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
-        <dependency org="log4j" name="log4j" rev="1.2.17"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.19.0" />
+        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.19.0" />
         <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-client -->
         <dependency org="com.sun.jersey" name="jersey-client" rev="1.18.3"/>
         <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-core -->
@@ -14,7 +15,10 @@
         <!-- https://mvnrepository.com/artifact/com.sun.jersey.contribs/jersey-multipart -->
         <dependency org="com.sun.jersey.contribs" name="jersey-multipart" rev="1.18.3"/>
         <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-server -->
-        <!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-server -->
         <dependency org="com.sun.jersey" name="jersey-server" rev="1.18.3"/>
+        <!-- JAXB API only -->
+        <dependency org="jakarta.xml.bind" name="jakarta.xml.bind-api" rev="2.3.3"/>
+        <!-- JAXB RI, Jakarta XML Binding -->
+        <dependency org="com.sun.xml.bind" name="jaxb-ri" rev="2.3.3" />
     </dependencies>
 </ivy-module>

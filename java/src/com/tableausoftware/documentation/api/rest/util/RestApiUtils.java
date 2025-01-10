@@ -22,7 +22,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.xml.sax.SAXException;
 
 import com.google.common.io.Files;
@@ -112,21 +113,43 @@ public class RestApiUtils {
      * @return the URI builder
      */
     private static UriBuilder getApiUriBuilder() {
-        return UriBuilder.fromPath(m_properties.getProperty("server.host") + "/api/3.24");
+        return UriBuilder.fromPath(m_properties.getProperty("server.host")
+                        + "/api/"
+                        + m_properties.getProperty("server.schema.version"));
     }
     /**
      * Initializes the RestApiUtils. The initialize code loads values from the configuration
      * file and initializes the JAXB marshaller and unmarshaller.
      */
     private static void initialize() {
+        m_logger.info("Initializing...");
         try {
             m_properties.load(new FileInputStream("res/config.properties"));
-            jaxbContext = JAXBContext.newInstance(TsRequest.class, TsResponse.class);
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            schema = schemaFactory.newSchema(new File(m_properties.getProperty("server.schema.location")));
-        } catch (JAXBException | SAXException | IOException ex) {
-            throw new IllegalStateException("Failed to initialize the REST API");
+        } catch (Exception ex) {
+            throw new IllegalStateException("Failed to read configuration properties");
         }
+        Schema schema;
+        try {
+            final String schemaLocation = m_properties.getProperty("server.schema.location");
+            m_logger.info("Schema at " + schemaLocation);
+            File schemaFile = new File(schemaLocation);
+            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            schema = schemaFactory.newSchema(schemaFile);
+            m_logger.info("Schema factory complete");
+        } catch (SAXException ex) {
+            throw new IllegalStateException("Failed to load schema file");
+        }
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(TsRequest.class, TsResponse.class);
+            s_jaxbMarshaller = jaxbContext.createMarshaller();
+            s_jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            s_jaxbUnmarshaller.setSchema(schema);
+            s_jaxbMarshaller.setSchema(schema);
+        } catch (JAXBException ex) {
+            throw new IllegalStateException("Failed to initialize the REST API with schema", ex);
+
+        }
+        m_logger.info("Schema initialization complete");
     }
 
     private Marshaller getMarshallerInstance(){
@@ -155,7 +178,7 @@ public class RestApiUtils {
 
     private final String TABLEAU_PAYLOAD_NAME = "request_payload";
 
-    private Logger m_logger = Logger.getLogger(RestApiUtils.class);
+    private static Logger m_logger = LogManager.getLogger();
 
     private ObjectFactory m_objectFactory = new ObjectFactory();
 
@@ -418,7 +441,7 @@ public class RestApiUtils {
         TsResponse response = post(url, null, payload);
 
         // Verifies that the response has a credentials element
-        if (response.getCredentials() != null) {
+        if (response != null && response.getCredentials() != null) {
             m_logger.info("Sign in is successful!");
 
             return response.getCredentials();
@@ -815,21 +838,23 @@ public class RestApiUtils {
      * @return the response from the request
      */
     private TsResponse post(String url, String authToken, TsRequest requestPayload) {
-        // Creates an instance of StringWriter to hold the XML for the request
-        StringWriter writer = new StringWriter();
+        String payload = "";
 
         // Marshals the TsRequest object into XML format if it is not null
         if (requestPayload != null) {
+            // Creates an instance of StringWriter to hold the XML for the request
+            StringWriter writer = new StringWriter();
+
             try {
                 getMarshallerInstance().marshal(requestPayload, writer);
             } catch (JAXBException ex) {
-                m_logger.error("There was a problem marshalling the payload");
+                m_logger.error("There was a problem marshalling the payload: " + ex);
+                m_logger.error("Not posting to " + url);
+                throw new IllegalStateException(ex);
             }
+            // Converts the XML into a string
+            payload = writer.toString();
         }
-
-        // Converts the XML into a string
-        String payload = writer.toString();
-
         m_logger.debug("Input payload: \n" + payload);
 
         // Creates the HTTP client object and makes the HTTP request to the
@@ -1038,8 +1063,10 @@ public class RestApiUtils {
             StringReader reader = new StringReader(responseXML);
             tsResponse = getUnmarshallerInstance().unmarshal(new StreamSource(reader), TsResponse.class).getValue();
         } catch (JAXBException e) {
-            m_logger.error("Failed to parse response from server due to:");
-            e.printStackTrace();
+            m_logger.error("Failed to parse response from server due to:" + e.toString());
+            // if more information is needed
+            // e.printStackTrace();
+            m_logger.error(responseXML);
         }
 
         return tsResponse;

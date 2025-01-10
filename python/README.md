@@ -10,8 +10,9 @@ Running the samples
 * All samples require 2 arguments: server adress (without a trailing slash) and username
 * Run by executing ```python sample_file_name.py <server_address> <username>```
 * Specific information for each sample are included at the top of each file
-* API version is set to 3.5 by default for Tableau Server 2019.3, but it can be changed in [version.py](./version.py)
-* For Tableau Server 9.0, the REST API namespace must be changed (refer to the comment in each sample where the namespace, `xmlns`, is defined)
+* API version is set to 3.24 by default, but it can be changed in [version.py](./version.py)
+
+For API versions and server versions, see https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_concepts_versions.htm
 
 REST API Samples
 ---------------

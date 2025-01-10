@@ -1,8 +1,8 @@
 
 ## Requirements
 
-* Tableau Server
-* Java SDK 8
+* Tableau Server, or an account on Tableau Cloud
+* Java SDK
   * Download: <http://www.oracle.com/technetwork/java/javase/downloads/index.html>
 * Apache Ant
   * It is not neccessary to run the "Optional" steps in the Apache Ant guide.
@@ -14,6 +14,11 @@
 ## Getting started
 
 1. Install the tools listed in the "Requirements" section.
+   1. Make sure that Tableau Server is running if you are using your own server.
+1. In the /res folder, open the config.properties file using a text editor.
+   1. Modify the configurations as instructed in the file. 
+   2. A sample workbook is already provided with this sample, but you can use any packaged workbook that you want.
+   
 1. Download the REST API schema and save it in the `/res` folder under the folder where this README file is. For more information about the schema, see the following documentation:
 
    <http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm#REST/rest_api_concepts_schema.htm>
@@ -44,9 +49,9 @@
 
 1. Make sure that Tableau Server is running.
 1. Open a command prompt or terminal.
-1. In the command prompt window, change directory to the sample code's parent folder.
-1. Enter `ant` in the command prompt to compile the sample code and download dependencies.
-1. Enter `ant run` in the command prompt to run the sample code after compilation.
+   1. In the command prompt window, change directory to the sample code's parent folder.
+   1. Enter `ant` in the command prompt to compile the sample code and download dependencies.
+   1. Enter `ant run` in the command prompt to run the sample code after compilation.
 
 ## Possible problems
 
@@ -54,3 +59,13 @@ When `ant` is run in a command prompt, it may respond with "ant is not recognize
 
 Make sure that the `ANT_HOME` and `JAVA_HOME` variables are set as described in the installation guide for Apache Ant. Paths should not include quotes.
 For more information, see <http://ant.apache.org/manual/install.html#windows>
+------
+
+The example code uses version 3.0 of the REST API and schema. If you want to use a different version:
+1. Download the REST API schema and save it in the `/res` folder under the folder where this README file is. For more information about the schema, see the following documentation:
+
+   <http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm#REST/rest_api_concepts_schema.htm>
+
+1. In the `/res` folder, open the `config.properties` file using a text editor.
+1. Update the schema configuration properties to match the new file.
+------
