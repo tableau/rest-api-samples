@@ -1,0 +1,55 @@
+{
+  "Datasources": [
+    {
+      "tableauWorkingDirectory": "$(System.DefaultWorkingDirectory)/_BUILD/TABLEAU/",
+      "datasourceName": "My Sample Tableau Data Source",
+      "ringNumber": "$(ring_number)",
+      "tableauServer": "$(tableau_server)",
+      "tableauUsername": "$(tableau_username)",
+      "tableauPassword": "$(tableau_password)",
+      "projectId": "$(tableau.projectid)",
+      "azureSqlDbServer": "$(sql_server)",
+      "azureSqlDbName": "$(sql_database)",
+      "azureSqlDbUsername": "$(sql_username)",
+      "azureSqlDbPassword": "$(sql_password)",
+      "hyperDatabasePath": "Data",
+      "scheduleId": "67a1ee69-d5b3-42a1-80ff-aca48547e33a"
+    },
+    {
+      "tableauWorkingDirectory": "$(System.DefaultWorkingDirectory)/_BUILD/TABLEAU/",
+      "datasourceName": "My Sample Tableau Data Source With Multiple Connections",
+      "ringNumber": "$(ring_number)",
+      "tableauServer": "$(tableau_server)",
+      "tableauUsername": "$(tableau_username)",
+      "tableauPassword": "$(tableau_password)",
+      "projectId": "$(tableau.projectid)",
+      "connections": [
+        {
+          "azureSqlDbServer": "$(sql_server)",
+          "azureSqlDbName": "$(sql_database)",
+          "azureSqlDbUsername": "$(sql_username)",
+          "azureSqlDbPassword": "$(sql_password)"
+        },
+        {
+          "azureSqlDbServer": "$(sql_server)",
+          "azureSqlDbName": "$(sql_database)",
+          "azureSqlDbUsername": "$(sql_username)",
+          "azureSqlDbPassword": "$(sql_password)"
+        }
+      ],
+      "hyperDatabasePath": "Data",
+      "scheduleId": "67a1ee69-d5b3-42a1-80ff-aca48547e33a"
+    }
+  ],
+  "Workbooks": [
+    {
+      "tableauServer": "$(tableau_server)",
+      "tableauUsername": "$(tableau_username)",
+      "tableauPassword": "$(tableau_password)",
+      "projectId": "$(tableau.projectid)",
+      "tableauWorkingDirectory": "$(System.DefaultWorkingDirectory)/_BUILD/TABLEAU/",
+      "workbookName": "My Sample Tableau Dashboard",
+      "ringNumber": "$(ring_number)"
+    }
+  ]
+}
