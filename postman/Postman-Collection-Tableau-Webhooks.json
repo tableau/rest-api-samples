@@ -53,7 +53,7 @@
 								"signin"
 							]
 						},
-						"description": "Sign in with a usernamd and password and get an authentication token from Tableau. Then update the Postman collection variables to use the returned authentication token and site ID."
+						"description": "Sign in with a username and password and get an authentication token from Tableau. Then update the Postman collection variables to use the returned authentication token and site ID."
 					},
 					"response": []
 				},
