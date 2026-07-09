@@ -3,6 +3,8 @@
 package com.tableausoftware.documentation.api.rest;
 
 import java.io.File;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -44,70 +46,82 @@ public class Demo {
 
         logger.info("Site ID: {}", currentSiteId);
 
-        ProjectListType projects = restApiUtils.invokeQueryProjects(credential, currentSiteId);
-        if (projects == null) {
-            logger.error("Failed to query projects");
-            restApiUtils.invokeSignOut(credential);
-            return;
+        ProjectListType projects = null;
+        try {
+            projects = restApiUtils.invokeQueryProjects(credential, currentSiteId);
+        } catch (Exception e) {
+            logger.error("Failed to query projects: {}", e.getMessage());
         }
 
         String targetProjectName = RestApiUtils.getProperty("project.name", "Default");
         ProjectType defaultProject = null;
-        for (ProjectType project : projects.getProject()) {
-            if (targetProjectName.equalsIgnoreCase(project.getName())) {
-                defaultProject = project;
-                logger.info("Project '{}' found: {}", project.getName(), project.getId());
-                break;
+        if (projects != null) {
+            for (ProjectType project : projects.getProject()) {
+                if (targetProjectName.equalsIgnoreCase(project.getName())) {
+                    defaultProject = project;
+                    logger.info("Project '{}' found: {}", project.getName(), project.getId());
+                    break;
+                }
+            }
+            if (defaultProject == null) {
+                logger.warn("No project named '{}' found. First 5 projects on site:", targetProjectName);
+                projects.getProject().stream().limit(5).forEach(p ->
+                        logger.warn("  '{}' ({})", p.getName(), p.getId()));
             }
         }
 
-        if (defaultProject == null) {
-            logger.warn("No project named '{}' found. First 5 projects on site:", targetProjectName);
-            projects.getProject().stream().limit(5).forEach(p ->
-                    logger.warn("  '{}' ({})", p.getName(), p.getId()));
-            logger.error("Failed to find project '{}'", targetProjectName);
-            restApiUtils.invokeSignOut(credential);
-            return;
+        WorkbookType publishedWorkbook = null;
+        if (defaultProject != null) {
+            String baseName = RestApiUtils.getProperty("workbook.sample.name");
+            String workbookName = baseName + " " + LocalTime.now().format(DateTimeFormatter.ofPattern("HH-mm"));
+            String workbookPath = RestApiUtils.getProperty("workbook.sample.path");
+            File workbookFile = new File(workbookPath);
+            boolean chunkedPublish = Boolean.parseBoolean(RestApiUtils.getProperty("workbook.publish.chunked"));
+            try {
+                publishedWorkbook = restApiUtils.invokePublishWorkbook(credential, currentSiteId,
+                        defaultProject.getId(), workbookName, workbookFile, chunkedPublish);
+            } catch (Exception e) {
+                logger.error("Failed to publish workbook: {}", e.getMessage());
+            }
+        } else {
+            logger.warn("Skipping publish: no target project found");
         }
 
-        String workbookName = RestApiUtils.getProperty("workbook.sample.name");
-        String workbookPath = RestApiUtils.getProperty("workbook.sample.path");
-        File workbookFile = new File(workbookPath);
-        boolean chunkedPublish = Boolean.parseBoolean(RestApiUtils.getProperty("workbook.publish.chunked"));
-
-        WorkbookType publishedWorkbook = restApiUtils.invokePublishWorkbook(credential, currentSiteId,
-                defaultProject.getId(), workbookName, workbookFile, chunkedPublish);
-
-        if (publishedWorkbook == null) {
-            logger.error("Failed to publish workbook");
-            restApiUtils.invokeSignOut(credential);
-            return;
+        GroupType group = null;
+        try {
+            group = restApiUtils.invokeCreateGroup(credential, currentSiteId, "TableauExample");
+        } catch (Exception e) {
+            logger.error("Failed to create group: {}", e.getMessage());
         }
 
-        GroupType group = restApiUtils.invokeCreateGroup(credential, currentSiteId, "TableauExample");
-        if (group == null) {
-            logger.error("Failed to create group");
-            restApiUtils.invokeSignOut(credential);
-            return;
+        if (publishedWorkbook != null && group != null) {
+            GranteeCapabilitiesType groupCapabilities = restApiUtils.createGroupGranteeCapability(
+                    group, Map.of("Read", "Allow", "ChangePermissions", "Deny"));
+            try {
+                restApiUtils.invokeAddPermissionsToWorkbook(credential, currentSiteId,
+                        publishedWorkbook.getId(), List.of(groupCapabilities));
+            } catch (Exception e) {
+                logger.error("Failed to add permissions to workbook: {}", e.getMessage());
+            }
+        } else {
+            logger.warn("Skipping add permissions: missing published workbook or group");
         }
 
-        GranteeCapabilitiesType groupCapabilities = restApiUtils.createGroupGranteeCapability(
-                group, Map.of("Read", "Allow", "ChangePermissions", "Deny"));
-
-        restApiUtils.invokeAddPermissionsToWorkbook(credential, currentSiteId,
-                publishedWorkbook.getId(), List.of(groupCapabilities));
-
-        WorkbookListType userWorkbooks =
-                restApiUtils.invokeQueryWorkbooks(credential, currentSiteId, currentUserId);
-        if (userWorkbooks != null) {
-            for (WorkbookType workbook : userWorkbooks.getWorkbook()) {
-                if (workbook.getId().equals(publishedWorkbook.getId())) {
-                    logger.debug("Published workbook found: {}", workbook.getId());
-                    if (workbook.getOwner().getId().equals(currentUserId)) {
-                        logger.debug("Published workbook was published by current user");
+        try {
+            WorkbookListType userWorkbooks =
+                    restApiUtils.invokeQueryWorkbooks(credential, currentSiteId, currentUserId);
+            if (userWorkbooks != null) {
+                for (WorkbookType workbook : userWorkbooks.getWorkbook()) {
+                    if (publishedWorkbook != null && workbook.getId().equals(publishedWorkbook.getId())) {
+                        logger.debug("Published workbook found: {}", workbook.getId());
+                        if (workbook.getOwner().getId().equals(currentUserId)) {
+                            logger.debug("Published workbook was published by current user");
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            logger.error("Failed to query workbooks: {}", e.getMessage());
         }
 
         restApiUtils.invokeSignOut(credential);
