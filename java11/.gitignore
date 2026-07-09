@@ -1,0 +1,6 @@
+target/
+*.class
+*.jar
+
+# Keep config.properties.example in source control; exclude real config
+res/config.properties
