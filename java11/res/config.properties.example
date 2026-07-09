@@ -1,0 +1,34 @@
+# Copy this file to config.properties and fill in the values below.
+# config.properties is excluded from source control.
+
+# Set this to the HTTPS URL of your Tableau Server or Tableau Cloud site.
+server.host=https://YOUR-SERVER
+
+# Set this to the content URL of the site to connect to.
+# Leave empty to connect to the Default site.
+site.default.contentUrl=
+
+# Personal Access Token (recommended). Create one in your Tableau account settings.
+pat.token.name=<YOUR-TOKEN-NAME>
+pat.token.secret=<YOUR-TOKEN-SECRET>
+
+# Username and password (alternative to PAT). Uncomment and update Demo.java
+# to call invokeSignIn() instead of invokeSignInWithPAT() if preferred.
+# user.admin.name=admin
+# user.admin.password=<YOUR-ADMIN-PASSWORD>
+
+# Project to publish the workbook into. Defaults to "Default" if not set.
+# project.name=Default
+
+# Set the name and path of the workbook to publish.
+workbook.sample.name=World Indicators
+workbook.sample.path=res/World Indicators-En-US.twbx
+
+# Set whether the workbook should be published in chunks or not.
+workbook.publish.chunked=true
+
+# REST API version to use. This affects only the URL path; binding classes
+# are generated against a specific schema version and must be manually
+# updated for compatibility with a different API version.
+# See: https://help.tableau.com/current/api/rest_api/en-us/REST/rest_api_concepts_versions.htm
+server.api.version=3.29
