@@ -40,7 +40,13 @@ public class Demo {
         String tokenSecret = RestApiUtils.getProperty("pat.token.secret");
         String contentUrl = RestApiUtils.getProperty("site.default.contentUrl");
 
-        TableauCredentialsType credential = restApiUtils.invokeSignInWithPAT(tokenName, tokenSecret, contentUrl);
+        TableauCredentialsType credential;
+        try {
+            credential = restApiUtils.invokeSignInWithPAT(tokenName, tokenSecret, contentUrl);
+        } catch (Exception e) {
+            logger.error("Failed to sign in", e);
+            return;
+        }
         String currentSiteId = credential.getSite().getId();
         String currentUserId = credential.getUser().getId();
 
@@ -50,7 +56,7 @@ public class Demo {
         try {
             projects = restApiUtils.invokeQueryProjects(credential, currentSiteId);
         } catch (Exception e) {
-            logger.error("Failed to query projects: {}", e.getMessage());
+            logger.error("Failed to query projects", e);
         }
 
         String targetProjectName = RestApiUtils.getProperty("project.name", "Default");
@@ -81,7 +87,7 @@ public class Demo {
                 publishedWorkbook = restApiUtils.invokePublishWorkbook(credential, currentSiteId,
                         defaultProject.getId(), workbookName, workbookFile, chunkedPublish);
             } catch (Exception e) {
-                logger.error("Failed to publish workbook: {}", e.getMessage());
+                logger.error("Failed to publish workbook", e);
             }
         } else {
             logger.warn("Skipping publish: no target project found");
@@ -91,7 +97,7 @@ public class Demo {
         try {
             group = restApiUtils.invokeCreateGroup(credential, currentSiteId, "TableauExample");
         } catch (Exception e) {
-            logger.error("Failed to create group: {}", e.getMessage());
+            logger.error("Failed to create group", e);
         }
 
         if (publishedWorkbook != null && group != null) {
@@ -101,7 +107,7 @@ public class Demo {
                 restApiUtils.invokeAddPermissionsToWorkbook(credential, currentSiteId,
                         publishedWorkbook.getId(), List.of(groupCapabilities));
             } catch (Exception e) {
-                logger.error("Failed to add permissions to workbook: {}", e.getMessage());
+                logger.error("Failed to add permissions to workbook", e);
             }
         } else {
             logger.warn("Skipping add permissions: missing published workbook or group");
@@ -121,7 +127,7 @@ public class Demo {
                 }
             }
         } catch (Exception e) {
-            logger.error("Failed to query workbooks: {}", e.getMessage());
+            logger.error("Failed to query workbooks", e);
         }
 
         restApiUtils.invokeSignOut(credential);
