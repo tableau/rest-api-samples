@@ -2,12 +2,13 @@
 <!-- Copyright (c) 2016 Tableau. Licensed under the MIT License. -->
 <!-- SPDX-License-Identifier: MIT -->
 <xs:schema xmlns="http://tableau.com/api"
-            xmlns:fn="http://www.w3.org/2005/xpath-functions"
-            xmlns:map="http://www.w3.org/2005/xpath-functions/map"
-            xmlns:tbl="http://tableau.com/api"
-            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            targetNamespace="http://tableau.com/api"><!--
+           xmlns:fn="http://www.w3.org/2005/xpath-functions"
+           xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+           xmlns:tbl="http://tableau.com/api"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           targetNamespace="http://tableau.com/api"
+           elementFormDefault="qualified"><!--
                     XML schema for the Tableau Server REST API 3.29
                     Released with Tableau Server 26.2
                     File generated using Saxonica-->
@@ -16,9 +17,9 @@
          <xs:choice>
             <xs:sequence>
                <xs:element name="actions"
-                            type="dataUpdateActionType"
-                            minOccurs="0"
-                            maxOccurs="unbounded"/>
+                           type="dataUpdateActionType"
+                           minOccurs="0"
+                           maxOccurs="unbounded"/>
             </xs:sequence>
             <xs:element name="action" type="userActionType"/>
             <xs:element name="apiToken" type="apiTokenType"/>
@@ -36,9 +37,9 @@
             <xs:element name="connectors" type="connectorListType"/>
             <xs:element name="contentList" type="contentListType"/>
             <xs:element name="createServerScimConfigRequest"
-                         type="createServerScimConfigRequestType"/>
+                        type="createServerScimConfigRequestType"/>
             <xs:element name="createServerScimConfigRequestForUpdate"
-                         type="createServerScimConfigRequestUpdateType"/>
+                        type="createServerScimConfigRequestUpdateType"/>
             <xs:element name="credentials" type="tableauCredentialsType"/>
             <xs:element name="customView" type="customViewType"/>
             <xs:element name="dataAlert" type="dataAlertType"/>
@@ -61,9 +62,9 @@
             <xs:element name="extensionsServerSettings" type="extensionsServerSettingsType"/>
             <xs:element name="extensionsSiteSettings" type="extensionsSiteSettingsType"/>
             <xs:element name="externalAuthorizationServer"
-                         type="externalAuthorizationServerType"/>
+                        type="externalAuthorizationServerType"/>
             <xs:element name="externalAuthorizationServerList"
-                         type="externalAuthorizationServerListType"/>
+                        type="externalAuthorizationServerListType"/>
             <xs:element name="extractRefresh" type="taskExtractRefreshType"/>
             <xs:element name="favorite" type="favoriteType"/>
             <xs:element name="favoriteOrderings" type="favoriteOrderingListType"/>
@@ -105,16 +106,16 @@
             <xs:element name="task" type="taskType"/>
             <xs:element name="user" type="userType"/>
             <xs:element name="userNotificationsPreference"
-                         type="userNotificationsPreferenceType"/>
+                        type="userNotificationsPreferenceType"/>
             <xs:element name="userNotificationsPreferences"
-                         type="userNotificationsPreferenceListType"/>
+                        type="userNotificationsPreferenceListType"/>
             <xs:element name="users" type="userListType"/>
             <xs:element name="view" type="viewType"/>
             <xs:element name="virtualConnection" type="virtualConnectionType"/>
             <xs:element name="virtualConnectionConnections"
-                         type="virtualConnectionConnectionsType"/>
+                        type="virtualConnectionConnectionsType"/>
             <xs:element name="virtualConnectionSourceConnection"
-                         type="virtualConnectionSourceConnectionType"/>
+                        type="virtualConnectionSourceConnectionType"/>
             <xs:element name="virtualConnections" type="virtualConnectionListType"/>
             <xs:element name="webhook" type="webhookType"/>
             <xs:element name="workbook" type="workbookType"/>
@@ -147,13 +148,13 @@
                <xs:element name="contentItems" type="contentItemListType"/>
                <xs:element name="contentLocation" type="locationType"/>
                <xs:element name="createServerScimConfigResponse"
-                            type="createServerScimConfigResponseType"/>
+                           type="createServerScimConfigResponseType"/>
                <xs:element name="createServerScimConfigResponseForUpdate"
-                            type="createServerScimConfigResponseUpdateType"/>
+                           type="createServerScimConfigResponseUpdateType"/>
                <xs:element name="credentials" type="tableauCredentialsType"/>
                <xs:element name="customView" type="customViewType"/>
                <xs:element name="customViewAsUserDefaultResults"
-                            type="customViewAsUserDefaultViewResultListType"/>
+                           type="customViewAsUserDefaultViewResultListType"/>
                <xs:element name="dataAlert" type="dataAlertType"/>
                <xs:element name="dataAlertCreateAlert" type="dataAlertCreateAlertType"/>
                <xs:element name="dataAlertUpdateResults" type="dataAlertUpdateStatusListType"/>
@@ -179,9 +180,9 @@
                <xs:element name="extensionsServerSettings" type="extensionsServerSettingsType"/>
                <xs:element name="extensionsSiteSettings" type="extensionsSiteSettingsType"/>
                <xs:element name="externalAuthorizationServer"
-                            type="externalAuthorizationServerType"/>
+                           type="externalAuthorizationServerType"/>
                <xs:element name="externalAuthorizationServerList"
-                            type="externalAuthorizationServerListType"/>
+                           type="externalAuthorizationServerListType"/>
                <xs:element name="extractRefresh" type="taskExtractRefreshType"/>
                <xs:element name="favorites" type="favoriteListType"/>
                <xs:element name="fileUpload" type="fileUploadType"/>
@@ -205,13 +206,15 @@
                <xs:element name="metric" type="metricType"/>
                <xs:element name="mobileSecuritySettingsList" type="mobileSecuritySettingsListType"/>
                <xs:element name="notificationPreferenceUpdateStatus"
-                            type="notificationPreferenceUpdateStatusType"/>
+                           type="notificationPreferenceUpdateStatusType"/>
                <xs:element name="notificationUpdateResult"
-                            type="notificationsPreferenceUpdateStatusListType"/>
+                           type="notificationsPreferenceUpdateStatusListType"/>
                <xs:element name="onboarding" type="onboarding"/>
                <xs:element name="permissions" type="permissionsType"/>
+               <xs:element name="personalAccessTokenValidation"
+                           type="personalAccessTokenValidationType"/>
                <xs:element name="personalAccessTokenWithSecret"
-                            type="personalAccessTokenWithSecretType"/>
+                           type="personalAccessTokenWithSecretType"/>
                <xs:element name="personalAccessTokens" type="personalAccessTokenListType"/>
                <xs:element name="personalSpace" type="personalSpaceType"/>
                <xs:element name="project" type="projectType"/>
@@ -251,17 +254,17 @@
                <xs:element name="uri" type="xs:string"/>
                <xs:element name="user" type="userType"/>
                <xs:element name="userNotificationsPreference"
-                            type="userNotificationsPreferenceType"/>
+                           type="userNotificationsPreferenceType"/>
                <xs:element name="userNotificationsPreferences"
-                            type="userNotificationsPreferenceListType"/>
+                           type="userNotificationsPreferenceListType"/>
                <xs:element name="userOperationResult" type="linkUserOperationResultType"/>
                <xs:element name="view" type="viewType"/>
                <xs:element name="views" type="viewListType"/>
                <xs:element name="virtualConnection" type="virtualConnectionType"/>
                <xs:element name="virtualConnectionConnections"
-                            type="virtualConnectionConnectionsType"/>
+                           type="virtualConnectionConnectionsType"/>
                <xs:element name="virtualConnectionSourceConnection"
-                            type="virtualConnectionSourceConnectionType"/>
+                           type="virtualConnectionSourceConnectionType"/>
                <xs:element name="virtualConnections" type="virtualConnectionListType"/>
                <xs:element name="webhook" type="webhookType"/>
                <xs:element name="webhookTestResult" type="webhookTestResultType"/>
@@ -329,9 +332,9 @@
    <xs:complexType name="associatedUserLuidListType">
       <xs:sequence>
          <xs:element name="associatedUserLuid"
-                      type="xs:string"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="xs:string"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="associatedUserLuidMappingType">
@@ -352,9 +355,9 @@
    <xs:complexType name="backgroundJobListType">
       <xs:sequence>
          <xs:element name="backgroundJob"
-                      type="backgroundJobType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="backgroundJobType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="backgroundJobType">
@@ -381,9 +384,9 @@
    <xs:complexType name="bridgeClientListType">
       <xs:sequence>
          <xs:element name="bridgeClient"
-                      type="bridgeClientType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="bridgeClientType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="bridgeClientMoveRequestType">
@@ -395,9 +398,9 @@
    </xs:complexType>
    <xs:complexType name="bridgeClientType">
       <xs:attribute name="assignedToDefaultPool"
-                     type="xs:boolean"
-                     use="optional"
-                     default="false"/>
+                    type="xs:boolean"
+                    use="optional"
+                    default="false"/>
       <xs:attribute name="id" type="resourceIdType"/>
       <xs:attribute name="lastStatusConnectedTime" type="xs:dateTime"/>
       <xs:attribute name="name" type="xs:string"/>
@@ -406,9 +409,9 @@
       <xs:attribute name="poolId" type="xs:string" use="optional"/>
       <xs:attribute name="status" type="xs:string"/>
       <xs:attribute name="unassigned"
-                     type="xs:boolean"
-                     use="optional"
-                     default="false"/>
+                    type="xs:boolean"
+                    use="optional"
+                    default="false"/>
       <xs:attribute name="version" type="xs:string"/>
    </xs:complexType>
    <xs:complexType name="bridgeDomainRequestType">
@@ -419,9 +422,9 @@
    <xs:complexType name="broadcastViewListType">
       <xs:sequence>
          <xs:element name="broadcast"
-                      type="broadcastViewType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="broadcastViewType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:attributeGroup name="broadcastViewOptionsGroup">
@@ -497,17 +500,17 @@
    <xs:complexType name="connectedApplicationListType">
       <xs:sequence>
          <xs:element name="connectedApplication"
-                      type="connectedApplicationType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="connectedApplicationType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="connectedApplicationProjectListType">
       <xs:sequence>
          <xs:element name="projectId"
-                      type="resourceIdType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="resourceIdType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="connectedApplicationSecretType">
@@ -517,13 +520,13 @@
    </xs:complexType>
    <xs:complexType name="connectedApplicationType">
       <xs:sequence>
-         <xs:element name="projectIds"
-                      type="connectedApplicationProjectListType"
-                      minOccurs="0"/>
          <xs:element name="secret"
-                      type="connectedApplicationSecretType"
-                      minOccurs="0"
-                      maxOccurs="2"/>
+                     type="connectedApplicationSecretType"
+                     minOccurs="0"
+                     maxOccurs="2"/>
+         <xs:element name="projectIds"
+                     type="connectedApplicationProjectListType"
+                     minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="clientId" type="resourceIdType"/>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
@@ -542,17 +545,17 @@
    <xs:complexType name="connectionListType">
       <xs:sequence>
          <xs:element name="connection"
-                      type="connectionType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="connectionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="connectionLuidListType">
       <xs:sequence>
          <xs:element name="connectionLuid"
-                      type="resourceIdType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="resourceIdType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="connectionParamsForAnchorType">
@@ -562,10 +565,10 @@
    </xs:complexType>
    <xs:complexType name="connectionType">
       <xs:sequence>
-         <xs:element name="connectionCredentials"
-                      type="connectionCredentialsType"
-                      minOccurs="0"/>
          <xs:element name="datasource" type="dataSourceType" minOccurs="0"/>
+         <xs:element name="connectionCredentials"
+                     type="connectionCredentialsType"
+                     minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="authenticationType" type="xs:string"/>
       <xs:attribute name="dbClass" type="xs:string"/>
@@ -587,9 +590,9 @@
    <xs:complexType name="connectorListType">
       <xs:sequence>
          <xs:element name="connector"
-                      type="connectorType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="connectorType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="includeAll" type="xs:boolean"/>
    </xs:complexType>
@@ -618,15 +621,15 @@
    <xs:complexType name="contentItemListType">
       <xs:sequence>
          <xs:element name="contentItem"
-                      type="contentItemType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="contentItemType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="contentItemType">
       <xs:sequence>
-         <xs:element name="deleter" type="userType" minOccurs="0"/>
          <xs:element name="owner" type="userType" minOccurs="0"/>
+         <xs:element name="deleter" type="userType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="contentType" type="xs:string"/>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
@@ -644,8 +647,8 @@
    </xs:complexType>
    <xs:complexType name="contentLocationRequestType">
       <xs:sequence>
-         <xs:element name="contentAction" type="contentActionType" minOccurs="0"/>
          <xs:element name="location" type="locationType" minOccurs="0"/>
+         <xs:element name="contentAction" type="contentActionType" minOccurs="0"/>
          <xs:element name="resourceList" type="resourceList"/>
       </xs:sequence>
    </xs:complexType>
@@ -662,9 +665,9 @@
    <xs:complexType name="createServerScimConfigRequestType">
       <xs:sequence>
          <xs:element name="siteId"
-                      type="resourceIdType"
-                      minOccurs="1"
-                      maxOccurs="unbounded"/>
+                     type="resourceIdType"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="authentication" type="xs:string"/>
       <xs:attribute name="authenticationId" type="xs:string"/>
@@ -704,31 +707,31 @@
    <xs:complexType name="customViewAsUserDefaultViewResultListType">
       <xs:sequence>
          <xs:element name="customViewAsUserDefaultViewResult"
-                      type="customViewAsUserDefaultViewResultType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="customViewAsUserDefaultViewResultType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="customViewAsUserDefaultViewResultType">
       <xs:sequence>
-         <xs:element name="error" type="errorType" minOccurs="0"/>
          <xs:element name="user" type="userType" minOccurs="0"/>
+         <xs:element name="error" type="errorType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="success" type="xs:boolean"/>
    </xs:complexType>
    <xs:complexType name="customViewListType">
       <xs:sequence>
          <xs:element name="customView"
-                      type="customViewType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="customViewType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="customViewType">
       <xs:sequence>
-         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="view" type="viewType" minOccurs="0"/>
          <xs:element name="workbook" type="workbookType" minOccurs="0"/>
+         <xs:element name="owner" type="userType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
       <xs:attribute name="id" type="xs:string"/>
@@ -799,16 +802,16 @@
    <xs:complexType name="dataAlertListType">
       <xs:sequence>
          <xs:element name="dataAlert"
-                      type="dataAlertType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="dataAlertType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="dataAlertType">
       <xs:sequence>
          <xs:element name="owner" type="userType"/>
-         <xs:element name="recipients" type="dataAlertsRecipientListType" minOccurs="0"/>
          <xs:element name="view" type="viewType"/>
+         <xs:element name="recipients" type="dataAlertsRecipientListType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="alertCondition" type="xs:string"/>
       <xs:attribute name="alertThreshold" type="xs:string"/>
@@ -834,9 +837,9 @@
    <xs:complexType name="dataAlertUpdateStatusListType">
       <xs:sequence>
          <xs:element name="dataAlertUpdateStatus"
-                      type="dataAlertUpdateStatusType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="dataAlertUpdateStatusType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="dataAlertUpdateStatusType">
@@ -849,9 +852,9 @@
    <xs:complexType name="dataAlertsRecipientListType">
       <xs:sequence>
          <xs:element name="recipient"
-                      type="dataAlertsRecipientType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="dataAlertsRecipientType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="dataAlertsRecipientType">
@@ -861,10 +864,10 @@
    </xs:complexType>
    <xs:complexType name="dataFreshnessPolicyType">
       <xs:sequence>
-         <xs:element name="freshAtSchedule" type="freshAtScheduleType" minOccurs="0"/>
          <xs:element name="freshEverySchedule"
-                      type="freshEveryScheduleType"
-                      minOccurs="0"/>
+                     type="freshEveryScheduleType"
+                     minOccurs="0"/>
+         <xs:element name="freshAtSchedule" type="freshAtScheduleType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="option">
          <xs:simpleType>
@@ -880,15 +883,15 @@
    <xs:complexType name="dataQualityIndicatorListType">
       <xs:sequence>
          <xs:element name="dataQualityIndicator"
-                      type="dataQualityIndicatorType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="dataQualityIndicatorType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="dataQualityIndicatorType">
       <xs:sequence>
-         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="owner" type="userType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="active" type="xs:boolean"/>
       <xs:attribute name="contentId" type="resourceIdType"/>
@@ -904,9 +907,9 @@
    <xs:complexType name="dataQualityTriggerListType">
       <xs:sequence>
          <xs:element name="dataQualityTrigger"
-                      type="dataQualityTriggerType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="dataQualityTriggerType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="dataQualityTriggerType">
@@ -926,15 +929,15 @@
    <xs:complexType name="dataQualityWarningListType">
       <xs:sequence>
          <xs:element name="dataQualityWarning"
-                      type="dataQualityWarningType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="dataQualityWarningType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="dataQualityWarningType">
       <xs:sequence>
-         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="owner" type="userType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="contentId" type="resourceIdType"/>
       <xs:attribute name="contentType" type="xs:string"/>
@@ -950,26 +953,26 @@
    <xs:complexType name="dataSourceListType">
       <xs:sequence>
          <xs:element name="datasource"
-                      type="dataSourceType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="dataSourceType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="includeAll" type="xs:boolean"/>
    </xs:complexType>
    <xs:complexType name="dataSourceType">
       <xs:sequence>
          <xs:element name="connectionCredentials"
-                      type="connectionCredentialsType"
-                      minOccurs="0"/>
+                     type="connectionCredentialsType"
+                     minOccurs="0"/>
+         <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="project" type="projectType" minOccurs="0"/>
          <xs:element name="location" type="locationType" minOccurs="0"/>
          <xs:element name="owner" type="userType" minOccurs="0"/>
-         <xs:element name="parentDataSourceUrls"
-                      type="xs:string"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
-         <xs:element name="project" type="projectType" minOccurs="0"/>
-         <xs:element name="site" type="siteType" minOccurs="0"/>
          <xs:element name="tags" type="tagListType" minOccurs="0"/>
+         <xs:element name="parentDataSourceUrls"
+                     type="xs:string"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="certificationNote" type="xs:string"/>
       <xs:attribute name="connectedWorkbooksCount" type="xs:nonNegativeInteger"/>
@@ -1003,8 +1006,8 @@
    <xs:complexType name="dataUpdateActionType">
       <xs:choice>
          <xs:sequence>
-            <xs:element name="action" type="xs:string"/>
             <xs:element name="condition" type="dataUpdateConditionType" minOccurs="0"/>
+            <xs:element name="action" type="xs:string"/>
             <xs:element name="source-file">
                <xs:simpleType>
                   <xs:restriction base="xs:string">
@@ -1013,25 +1016,25 @@
                   </xs:restriction>
                </xs:simpleType>
             </xs:element>
-            <xs:element name="source-schema" type="xs:string"/>
             <xs:element name="source-table" type="xs:string"/>
-            <xs:element name="target-schema" type="xs:string"/>
+            <xs:element name="source-schema" type="xs:string"/>
             <xs:element name="target-table" type="xs:string"/>
+            <xs:element name="target-schema" type="xs:string"/>
          </xs:sequence>
          <xs:element name="actions" type="dataUpdateActionType" minOccurs="0"/>
       </xs:choice>
    </xs:complexType>
    <xs:complexType name="dataUpdateConditionType">
       <xs:sequence>
+         <xs:element name="op" type="xs:string"/>
          <xs:choice>
             <xs:sequence>
-               <xs:element name="const" type="dataUpdateConstConditionType"/>
                <xs:element name="source-col" type="xs:string"/>
                <xs:element name="target-col" type="xs:string"/>
+               <xs:element name="const" type="dataUpdateConstConditionType"/>
             </xs:sequence>
             <xs:element name="args" type="dataUpdateConditionType" maxOccurs="unbounded"/>
          </xs:choice>
-         <xs:element name="op" type="xs:string"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="dataUpdateConstConditionType">
@@ -1053,9 +1056,9 @@
    <xs:complexType name="databaseAnchorRequestType">
       <xs:sequence>
          <xs:element name="connectionParams"
-                      type="connectionParamsForAnchorType"
-                      minOccurs="1"
-                      maxOccurs="1"/>
+                     type="connectionParamsForAnchorType"
+                     minOccurs="1"
+                     maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="datasourceFormattedName" type="xs:string"/>
       <xs:attribute name="datasourceName" type="xs:string"/>
@@ -1064,8 +1067,8 @@
    <xs:complexType name="databaseAnchorResponseListType">
       <xs:sequence>
          <xs:element name="databaseAnchor"
-                      type="databaseAnchorResponseType"
-                      maxOccurs="unbounded"/>
+                     type="databaseAnchorResponseType"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="databaseAnchorResponseType">
@@ -1077,10 +1080,10 @@
    </xs:complexType>
    <xs:complexType name="databaseType">
       <xs:sequence>
-         <xs:element name="certifier" type="userType"/>
-         <xs:element name="contact" type="userType"/>
-         <xs:element name="location" type="locationType"/>
          <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="contact" type="userType"/>
+         <xs:element name="certifier" type="userType"/>
+         <xs:element name="location" type="locationType"/>
          <xs:element name="tags" type="tagListType"/>
       </xs:sequence>
       <xs:attribute name="certificationNote" type="xs:string"/>
@@ -1120,9 +1123,9 @@
    <xs:complexType name="degradationListType">
       <xs:sequence>
          <xs:element name="downgradedFeature"
-                      type="degradationType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="degradationType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="degradationType">
@@ -1132,9 +1135,9 @@
    <xs:complexType name="domainDirectiveListType">
       <xs:sequence>
          <xs:element name="domain"
-                      type="domainDirectiveType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="domainDirectiveType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="domainDirectiveType">
@@ -1156,9 +1159,9 @@
    <xs:complexType name="edgePoolDomainTypeList">
       <xs:sequence>
          <xs:element name="domain"
-                      type="edgePoolDomainType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="edgePoolDomainType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="edgePoolRequestType">
@@ -1168,16 +1171,16 @@
    </xs:complexType>
    <xs:complexType name="edgePoolResponseType">
       <xs:sequence>
-         <xs:element name="domains" type="edgePoolDomainTypeList"/>
          <xs:element name="pool" type="edgePoolType"/>
+         <xs:element name="domains" type="edgePoolDomainTypeList"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="edgePoolResponseTypeList">
       <xs:sequence>
          <xs:element name="poolList"
-                      type="edgePoolResponseType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="edgePoolResponseType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="edgePoolType">
@@ -1191,16 +1194,16 @@
    <xs:complexType name="encryptedKeychainListType">
       <xs:sequence>
          <xs:element name="encryptedKeychain"
-                      type="xs:string"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="xs:string"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="errorType">
       <xs:sequence>
          <xs:element name="callstack" type="xs:string" minOccurs="0"/>
-         <xs:element name="detail" type="xs:string"/>
          <xs:element name="summary" type="xs:string"/>
+         <xs:element name="detail" type="xs:string"/>
       </xs:sequence>
       <xs:attribute name="code" type="xs:positiveInteger" use="required"/>
    </xs:complexType>
@@ -1222,44 +1225,44 @@
    </xs:complexType>
    <xs:complexType name="extensionsSafeListEntry">
       <xs:sequence>
+         <xs:element name="url" type="xs:string"/>
          <xs:element name="fullDataAllowed" type="xs:boolean"/>
          <xs:element name="promptNeeded" type="xs:boolean"/>
-         <xs:element name="url" type="xs:string"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="extensionsServerSettingsType">
       <xs:sequence>
+         <xs:element name="extensionsGloballyEnabled" type="xs:boolean"/>
          <xs:sequence>
             <xs:element name="blockList"
-                         type="xs:string"
-                         minOccurs="0"
-                         maxOccurs="unbounded"/>
+                        type="xs:string"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
          </xs:sequence>
-         <xs:element name="extensionsGloballyEnabled" type="xs:boolean"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="extensionsSiteSettingsType">
       <xs:sequence>
-         <xs:sequence>
-            <xs:element name="safeList"
-                         type="extensionsSafeListEntry"
-                         minOccurs="0"
-                         maxOccurs="unbounded"/>
-         </xs:sequence>
-         <xs:element name="allowTrusted" type="xs:boolean"/>
          <xs:element name="extensionsEnabled" type="xs:boolean"/>
-         <xs:element name="includePartnerBuilt" type="xs:boolean"/>
+         <xs:element name="useDefaultSetting" type="xs:boolean"/>
+         <xs:element name="allowTrusted" type="xs:boolean"/>
          <xs:element name="includeSandboxed" type="xs:boolean"/>
          <xs:element name="includeTableauBuilt" type="xs:boolean"/>
-         <xs:element name="useDefaultSetting" type="xs:boolean"/>
+         <xs:element name="includePartnerBuilt" type="xs:boolean"/>
+         <xs:sequence>
+            <xs:element name="safeList"
+                        type="extensionsSafeListEntry"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+         </xs:sequence>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="externalAuthorizationServerListType">
       <xs:sequence>
          <xs:element name="externalAuthorizationServer"
-                      type="externalAuthorizationServerType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="externalAuthorizationServerType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="externalAuthorizationServerType">
@@ -1272,29 +1275,29 @@
    </xs:complexType>
    <xs:complexType name="extractCreationJobType">
       <xs:sequence>
-         <xs:element name="datasource" type="dataSourceType"/>
-         <xs:element name="jobLuid" type="xs:string"/>
          <xs:element name="notes" type="xs:string"/>
          <xs:element name="workbook" type="workbookType"/>
+         <xs:element name="datasource" type="dataSourceType"/>
+         <xs:element name="jobLuid" type="xs:string"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="extractListType">
       <xs:sequence>
          <xs:element name="extract"
-                      type="extractType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="extractType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="extractRefreshJobType">
       <xs:sequence>
+         <xs:element name="notes" type="xs:string"/>
          <xs:choice>
             <xs:element name="datasource" type="dataSourceType"/>
             <xs:element name="view" type="viewType"/>
             <xs:element name="virtualConnection" type="virtualConnectionType"/>
             <xs:element name="workbook" type="workbookType"/>
          </xs:choice>
-         <xs:element name="notes" type="xs:string"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="extractType">
@@ -1316,17 +1319,17 @@
    <xs:complexType name="favoriteListType">
       <xs:sequence>
          <xs:element name="favorite"
-                      type="favoriteType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="favoriteType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="favoriteOrderingListType">
       <xs:sequence>
          <xs:element name="favoriteOrdering"
-                      type="favoriteOrderingType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="favoriteOrderingType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="favoriteOrderingType">
@@ -1372,8 +1375,8 @@
       <xs:attribute name="fileSize" type="xs:string"/>
       <xs:attribute name="maxFileChunkCount" type="xs:int"/>
       <xs:attribute name="uploadSessionId"
-                     type="fileUploadSessionIdType"
-                     use="required"/>
+                    type="fileUploadSessionIdType"
+                    use="required"/>
    </xs:complexType>
    <xs:complexType name="flowListType">
       <xs:sequence>
@@ -1383,9 +1386,9 @@
    <xs:complexType name="flowOutputStepListType">
       <xs:sequence>
          <xs:element name="flowOutputStep"
-                      type="flowOutputStepType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="flowOutputStepType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="flowOutputStepType">
@@ -1417,17 +1420,17 @@
    <xs:complexType name="flowParameterListType">
       <xs:sequence>
          <xs:element name="parameter"
-                      type="flowParameterType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="flowParameterType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="flowParameterListValueListType">
       <xs:sequence>
          <xs:element name="value"
-                      type="xs:string"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="xs:string"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="flowParameterRangeDomainType">
@@ -1443,9 +1446,9 @@
    <xs:complexType name="flowParameterRunListType">
       <xs:sequence>
          <xs:element name="parameterRuns"
-                      type="flowParameterRunType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="flowParameterRunType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="flowParameterRunType">
@@ -1477,9 +1480,9 @@
    <xs:complexType name="flowRunListType">
       <xs:sequence>
          <xs:element name="flowRuns"
-                      type="flowRunType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="flowRunType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="flowRunSpecType">
@@ -1488,8 +1491,8 @@
             <xs:complexType>
                <xs:sequence>
                   <xs:element name="flowOutputStep"
-                               type="flowOutputStepType"
-                               maxOccurs="unbounded"/>
+                              type="flowOutputStepType"
+                              maxOccurs="unbounded"/>
                </xs:sequence>
             </xs:complexType>
          </xs:element>
@@ -1497,8 +1500,8 @@
             <xs:complexType>
                <xs:sequence>
                   <xs:element name="flowParameterSpec"
-                               type="flowParameterSpecType"
-                               maxOccurs="unbounded"/>
+                              type="flowParameterSpecType"
+                              maxOccurs="unbounded"/>
                </xs:sequence>
             </xs:complexType>
          </xs:element>
@@ -1516,8 +1519,8 @@
    <xs:complexType name="flowRunType">
       <xs:sequence>
          <xs:element name="flowParameterRuns"
-                      type="flowParameterRunListType"
-                      minOccurs="0"/>
+                     type="flowParameterRunListType"
+                     minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="backgroundJobId" type="xs:string"/>
       <xs:attribute name="completedAt" type="xs:dateTime"/>
@@ -1539,11 +1542,11 @@
    </xs:complexType>
    <xs:complexType name="flowType">
       <xs:sequence>
-         <xs:element name="owner" type="userType" minOccurs="0"/>
-         <xs:element name="parameters" type="flowParameterListType" minOccurs="0"/>
-         <xs:element name="project" type="projectType" minOccurs="0"/>
          <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="project" type="projectType" minOccurs="0"/>
+         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="tags" type="tagListType" minOccurs="0"/>
+         <xs:element name="parameters" type="flowParameterListType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
       <xs:attribute name="description" type="xs:string"/>
@@ -1586,9 +1589,9 @@
             <xs:complexType>
                <xs:sequence>
                   <xs:element name="interval"
-                               type="intervalType"
-                               minOccurs="0"
-                               maxOccurs="31"/>
+                              type="intervalType"
+                              minOccurs="0"
+                              maxOccurs="31"/>
                </xs:sequence>
             </xs:complexType>
          </xs:element>
@@ -1643,9 +1646,9 @@
    <xs:complexType name="groupInfoListType">
       <xs:sequence>
          <xs:element name="group"
-                      type="groupInfoType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="groupInfoType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="groupInfoType">
@@ -1656,25 +1659,25 @@
    <xs:complexType name="groupListType">
       <xs:sequence>
          <xs:element name="group"
-                      type="groupType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="groupType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="groupSetListType">
       <xs:sequence>
          <xs:element name="groupSet"
-                      type="groupSetType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="groupSetType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="groupSetType">
       <xs:sequence>
          <xs:element name="group"
-                      type="groupType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="groupType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="groupCount" type="xs:nonNegativeInteger"/>
       <xs:attribute name="id" type="resourceIdType"/>
@@ -1764,19 +1767,19 @@
    </xs:complexType>
    <xs:complexType name="jobType">
       <xs:sequence>
-         <xs:element name="extractCreationJob"
-                      type="extractCreationJobType"
-                      minOccurs="0"/>
-         <xs:element name="extractRefreshJob" type="extractRefreshJobType" minOccurs="0"/>
-         <xs:element name="runFlowJobType" type="runFlowJobType" minOccurs="0"/>
          <xs:element name="statusNotes" type="statusNoteListType" minOccurs="0"/>
-         <xs:element name="subscriptionJobType" type="subscriptionJobType" minOccurs="0"/>
-         <xs:element name="thumbnailsRefreshJob"
-                      type="thumbnailsRefreshJobType"
-                      minOccurs="0"/>
          <xs:element name="updateUploadedFileJob"
-                      type="updateUploadedFileJobType"
-                      minOccurs="0"/>
+                     type="updateUploadedFileJobType"
+                     minOccurs="0"/>
+         <xs:element name="extractRefreshJob" type="extractRefreshJobType" minOccurs="0"/>
+         <xs:element name="subscriptionJobType" type="subscriptionJobType" minOccurs="0"/>
+         <xs:element name="runFlowJobType" type="runFlowJobType" minOccurs="0"/>
+         <xs:element name="extractCreationJob"
+                     type="extractCreationJobType"
+                     minOccurs="0"/>
+         <xs:element name="thumbnailsRefreshJob"
+                     type="thumbnailsRefreshJobType"
+                     minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="completedAt" type="xs:dateTime"/>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
@@ -1813,9 +1816,9 @@
    <xs:complexType name="labelCategoryListType">
       <xs:sequence>
          <xs:element name="labelCategory"
-                      type="labelCategoryType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="labelCategoryType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="labelCategoryType">
@@ -1825,15 +1828,15 @@
    <xs:complexType name="labelListType">
       <xs:sequence>
          <xs:element name="label"
-                      type="labelType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="labelType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="labelType">
       <xs:sequence>
-         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="owner" type="userType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="active" type="xs:boolean"/>
       <xs:attribute name="category" type="xs:string"/>
@@ -1850,9 +1853,9 @@
    <xs:complexType name="labelValueListType">
       <xs:sequence>
          <xs:element name="labelValue"
-                      type="labelValueType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="labelValueType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="labelValueType">
@@ -1921,8 +1924,8 @@
    </xs:simpleType>
    <xs:complexType name="linkUserPayloadType">
       <xs:sequence>
-         <xs:element name="siteRole" type="linkUserSiteRoleType"/>
          <xs:element name="user" type="linkUserType"/>
+         <xs:element name="siteRole" type="linkUserSiteRoleType"/>
       </xs:sequence>
       <xs:attribute name="sourceLinkUserId" type="xs:string"/>
       <xs:attribute name="sourceTenantId" type="xs:string"/>
@@ -1962,17 +1965,17 @@
    <xs:complexType name="linkedTaskListType">
       <xs:sequence>
          <xs:element name="linkedTasks"
-                      type="linkedTaskType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="linkedTaskType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="linkedTaskStepListType">
       <xs:sequence>
          <xs:element name="linkedTaskSteps"
-                      type="linkedTaskStepType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="linkedTaskStepType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="linkedTaskStepType">
@@ -1985,8 +1988,8 @@
    </xs:complexType>
    <xs:complexType name="linkedTaskType">
       <xs:sequence>
-         <xs:element name="linkedTaskSteps" type="linkedTaskStepListType"/>
          <xs:element name="schedule" type="scheduleType" minOccurs="0"/>
+         <xs:element name="linkedTaskSteps" type="linkedTaskStepListType"/>
       </xs:sequence>
       <xs:attribute name="id" type="resourceIdType"/>
       <xs:attribute name="numSteps" type="xs:nonNegativeInteger"/>
@@ -2012,24 +2015,24 @@
    <xs:complexType name="mcpSiteSettingsType">
       <xs:sequence>
          <xs:element name="settings"
-                      type="mcpSettingType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="mcpSettingType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="metricListType">
       <xs:sequence>
          <xs:element name="metric"
-                      type="metricType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="metricType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="metricType">
       <xs:sequence>
-         <xs:element name="owner" type="userType" minOccurs="0"/>
-         <xs:element name="project" type="projectType" minOccurs="0"/>
          <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="project" type="projectType" minOccurs="0"/>
+         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="tags" type="tagListType" minOccurs="0"/>
          <xs:element name="underlyingView" type="viewType" minOccurs="0"/>
       </xs:sequence>
@@ -2044,15 +2047,15 @@
    <xs:complexType name="mobileSecuritySettingsListType">
       <xs:sequence>
          <xs:element name="mobileSecuritySettings"
-                      type="mobileSecuritySettingsPolicyType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="mobileSecuritySettingsPolicyType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="mobileSecuritySettingsPolicyType">
       <xs:sequence>
-         <xs:element name="androidConfig" type="policyType"/>
          <xs:element name="iosConfig" type="policyType"/>
+         <xs:element name="androidConfig" type="policyType"/>
       </xs:sequence>
       <xs:attribute name="enabled" type="xs:boolean" use="required"/>
       <xs:attribute name="name" type="xs:string" use="required"/>
@@ -2062,7 +2065,6 @@
    </xs:complexType>
    <xs:complexType name="notificationPreferenceUpdateStatusType">
       <xs:sequence>
-         <xs:element name="error" type="errorType" minOccurs="0" maxOccurs="1"/>
          <xs:element name="status" minOccurs="1" maxOccurs="1">
             <xs:simpleType>
                <xs:restriction base="xs:string">
@@ -2072,25 +2074,26 @@
             </xs:simpleType>
          </xs:element>
          <xs:element name="userNotificationsPreference"
-                      type="userNotificationsPreferenceType"
-                      minOccurs="1"
-                      maxOccurs="1"/>
+                     type="userNotificationsPreferenceType"
+                     minOccurs="1"
+                     maxOccurs="1"/>
+         <xs:element name="error" type="errorType" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="notificationsPreferenceUpdateStatusListType">
       <xs:sequence>
          <xs:element name="notificationUpdateStatus"
-                      type="notificationPreferenceUpdateStatusType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="notificationPreferenceUpdateStatusType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="onboarding">
       <xs:sequence>
          <xs:element name="actions"
-                      type="onboardingActionsType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="onboardingActionsType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="onboardingActionsType">
@@ -2111,6 +2114,7 @@
    </xs:complexType>
    <xs:complexType name="permissionsType">
       <xs:sequence>
+         <xs:element name="parent" type="parentType" minOccurs="0"/>
          <xs:choice minOccurs="0">
             <xs:element name="collection" type="collectionType"/>
             <xs:element name="database" type="databaseType"/>
@@ -2125,18 +2129,17 @@
             <xs:element name="workbook" type="workbookType"/>
          </xs:choice>
          <xs:element name="granteeCapabilities"
-                      type="granteeCapabilitiesType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
-         <xs:element name="parent" type="parentType" minOccurs="0"/>
+                     type="granteeCapabilitiesType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="personalAccessTokenListType">
       <xs:sequence>
          <xs:element name="personalAccessToken"
-                      type="personalAccessTokenType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="personalAccessTokenType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="personalAccessTokenType">
@@ -2144,6 +2147,9 @@
       <xs:attribute name="lastUsedAt" type="xs:dateTime"/>
       <xs:attribute name="tokenGuid" type="xs:string"/>
       <xs:attribute name="tokenName" type="xs:string"/>
+   </xs:complexType>
+   <xs:complexType name="personalAccessTokenValidationType">
+      <xs:attribute name="active" type="xs:boolean" use="required"/>
    </xs:complexType>
    <xs:complexType name="personalAccessTokenWithSecretType">
       <xs:attribute name="expiresAt" type="xs:dateTime"/>
@@ -2159,9 +2165,9 @@
    <xs:complexType name="policyType">
       <xs:sequence>
          <xs:element name="valueList"
-                      type="xs:string"
-                      minOccurs="1"
-                      maxOccurs="unbounded"/>
+                     type="xs:string"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="enabled" type="xs:boolean" use="required"/>
       <xs:attribute name="severity" type="severityLevelType" use="required"/>
@@ -2182,9 +2188,9 @@
    <xs:complexType name="projectListType">
       <xs:sequence>
          <xs:element name="project"
-                      type="projectType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="projectType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="projectRefInputType">
@@ -2196,8 +2202,8 @@
    </xs:complexType>
    <xs:complexType name="projectType">
       <xs:sequence>
-         <xs:element name="contentsCounts" type="contentsCountsType" minOccurs="0"/>
          <xs:element name="owner" type="userType" minOccurs="0"/>
+         <xs:element name="contentsCounts" type="contentsCountsType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="contentPermissions">
          <xs:simpleType>
@@ -2222,8 +2228,8 @@
    <xs:complexType name="publishToSalesforceBatchType">
       <xs:sequence>
          <xs:element name="publishToSalesforceInfo"
-                      type="publishToSalesforceInfoType"
-                      maxOccurs="unbounded"/>
+                     type="publishToSalesforceInfoType"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="hasErrors" type="xs:boolean"/>
       <xs:attribute name="salesforceAppUrl" type="xs:string"/>
@@ -2253,9 +2259,9 @@
    <xs:complexType name="recentListType">
       <xs:sequence>
          <xs:element name="recent"
-                      type="recentType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="recentType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="recentType">
@@ -2275,9 +2281,9 @@
    <xs:complexType name="recommendationListType">
       <xs:sequence>
          <xs:element name="recommendation"
-                      type="recommendationType"
-                      minOccurs="0"
-                      maxOccurs="100"/>
+                     type="recommendationType"
+                     minOccurs="0"
+                     maxOccurs="100"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="recommendationType">
@@ -2304,9 +2310,9 @@
    <xs:complexType name="resourceList">
       <xs:sequence>
          <xs:element name="resource"
-                      type="contentTypeAndIdType"
-                      minOccurs="1"
-                      maxOccurs="unbounded"/>
+                     type="contentTypeAndIdType"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:simpleType name="restApiVersion">
@@ -2336,9 +2342,9 @@
    <xs:complexType name="revisionListType">
       <xs:sequence>
          <xs:element name="revision"
-                      type="revisionType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="revisionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="revisionType">
@@ -2354,17 +2360,17 @@
    <xs:complexType name="routingFilterListType">
       <xs:sequence>
          <xs:element name="routingFilter"
-                      type="routingFilterType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="routingFilterType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="routingFilterProjectsRequestType">
       <xs:sequence>
          <xs:element name="project"
-                      type="projectRefInputType"
-                      minOccurs="1"
-                      maxOccurs="unbounded"/>
+                     type="projectRefInputType"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="mode" use="required">
          <xs:simpleType>
@@ -2378,20 +2384,20 @@
    <xs:complexType name="routingFilterRequestType">
       <xs:sequence>
          <xs:element name="project"
-                      type="projectRefInputType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="projectRefInputType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="domain" type="xs:string"/>
-      <xs:attribute name="isBlocked" type="xs:boolean"/>
+      <xs:attribute name="domain" type="xs:string" use="required"/>
+      <xs:attribute name="isBlocked" type="xs:boolean" use="required"/>
       <xs:attribute name="poolId" type="xs:string"/>
    </xs:complexType>
    <xs:complexType name="routingFilterType">
       <xs:sequence>
          <xs:element name="project"
-                      type="projectRefType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="projectRefType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="createdAt" type="xs:dateTime" use="required"/>
       <xs:attribute name="domain" type="xs:string" use="required"/>
@@ -2403,8 +2409,8 @@
    </xs:complexType>
    <xs:complexType name="runFlowJobType">
       <xs:sequence>
-         <xs:element name="flow" type="flowType"/>
          <xs:element name="notes" type="xs:string"/>
+         <xs:element name="flow" type="flowType"/>
       </xs:sequence>
       <xs:attribute name="flowRunId" type="xs:string"/>
    </xs:complexType>
@@ -2425,17 +2431,17 @@
    <xs:complexType name="scheduleListType">
       <xs:sequence>
          <xs:element name="schedule"
-                      type="scheduleType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="scheduleType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="scheduleLuidListType">
       <xs:sequence>
          <xs:element name="scheduleLuid"
-                      type="resourceIdType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="resourceIdType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="scheduleType">
@@ -2483,9 +2489,9 @@
    <xs:complexType name="scimConfigurationListType">
       <xs:sequence>
          <xs:element name="scimConfiguration"
-                      type="scimConfigurationType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="scimConfigurationType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="scimConfigurationType">
@@ -2503,27 +2509,27 @@
    </xs:complexType>
    <xs:complexType name="serverInfo">
       <xs:sequence>
-         <xs:element name="platform" type="xs:string"/>
-         <xs:element name="prepConductorVersion" type="xs:string"/>
          <xs:element name="productVersion" type="productVersion"/>
+         <xs:element name="prepConductorVersion" type="xs:string"/>
          <xs:element name="restApiVersion" type="restApiVersion"/>
+         <xs:element name="platform" type="xs:string"/>
          <xs:element name="serverSettings" type="serverSettings"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="serverSettings">
       <xs:sequence>
          <xs:element name="oAuthEnabled" type="xs:boolean"/>
-         <xs:element name="offlineInteractionSupportedPhase" type="xs:int"/>
-         <xs:element name="sheetImageMaxAgeCeiling" type="xs:int"/>
          <xs:element name="sheetImageMaxAgeFloor" type="xs:int"/>
+         <xs:element name="sheetImageMaxAgeCeiling" type="xs:int"/>
+         <xs:element name="offlineInteractionSupportedPhase" type="xs:int"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="serviceTokenListType">
       <xs:sequence>
          <xs:element name="serviceToken"
-                      type="serviceTokenType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="serviceTokenType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="hasErrors" type="xs:boolean"/>
    </xs:complexType>
@@ -2546,9 +2552,9 @@
    <xs:complexType name="sessionsType">
       <xs:sequence>
          <xs:element name="session"
-                      type="sessionType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="sessionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:simpleType name="severityLevelType">
@@ -2561,9 +2567,9 @@
    <xs:complexType name="siteAuthConfigurationListType">
       <xs:sequence>
          <xs:element name="siteAuthConfiguration"
-                      type="siteAuthConfigurationType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="siteAuthConfigurationType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="siteAuthConfigurationType">
@@ -2600,9 +2606,9 @@
    <xs:complexType name="siteOIDCConfigurationListType">
       <xs:sequence>
          <xs:element name="siteOIDCConfiguration"
-                      type="siteOIDCConfigurationType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="siteOIDCConfigurationType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="siteOIDCConfigurationType">
@@ -2658,14 +2664,6 @@
    </xs:complexType>
    <xs:complexType name="siteType">
       <xs:sequence>
-         <xs:element name="settings"
-                      type="embeddingSettingsType"
-                      maxOccurs="unbounded"
-                      minOccurs="0"/>
-         <xs:element name="siteSettings"
-                      type="siteSettingType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
          <xs:element name="usage" minOccurs="0">
             <xs:complexType>
                <xs:attribute name="numCreators" type="xs:nonNegativeInteger"/>
@@ -2675,6 +2673,14 @@
                <xs:attribute name="storage" type="xs:nonNegativeInteger" use="required"/>
             </xs:complexType>
          </xs:element>
+         <xs:element name="settings"
+                     type="embeddingSettingsType"
+                     maxOccurs="unbounded"
+                     minOccurs="0"/>
+         <xs:element name="siteSettings"
+                     type="siteSettingType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="adminInsightsPublishFrequency" type="xs:int"/>
       <xs:attribute name="adminMode">
@@ -2730,9 +2736,9 @@
       <xs:attribute name="extractEncryptionMode" type="xs:string"/>
       <xs:attribute name="flowAutoSaveEnabled" type="xs:boolean"/>
       <xs:attribute name="flowFederationStrategySelectedConnectionEnabled"
-                     type="xs:boolean"/>
+                    type="xs:boolean"/>
       <xs:attribute name="flowOutputSubscriptionsDataAsEmailAttachmentEnabled"
-                     type="xs:boolean"/>
+                    type="xs:boolean"/>
       <xs:attribute name="flowOutputSubscriptionsDataInEmailBodyEnabled" type="xs:boolean"/>
       <xs:attribute name="flowOutputSubscriptionsEnabled" type="xs:boolean"/>
       <xs:attribute name="flowParametersAnyTypeEnabled" type="xs:boolean"/>
@@ -2819,9 +2825,9 @@
    <xs:complexType name="statusNoteListType">
       <xs:sequence>
          <xs:element name="statusNote"
-                      type="statusNoteType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="statusNoteType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="statusNoteType">
@@ -2872,9 +2878,9 @@
    <xs:complexType name="subscriptionListType">
       <xs:sequence>
          <xs:element name="subscription"
-                      type="subscriptionType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="subscriptionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="subscriptionType">
@@ -2906,9 +2912,9 @@
    <xs:complexType name="suggestionListType">
       <xs:sequence>
          <xs:element name="suggestion"
-                      type="suggestionType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="suggestionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="suggestionType">
@@ -2930,11 +2936,11 @@
    </xs:complexType>
    <xs:complexType name="tableType">
       <xs:sequence>
-         <xs:element name="certifier" type="userType"/>
-         <xs:element name="contact" type="userType"/>
-         <xs:element name="location" type="locationType"/>
          <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="contact" type="userType"/>
+         <xs:element name="certifier" type="userType"/>
          <xs:element name="tags" type="tagListType"/>
+         <xs:element name="location" type="locationType"/>
       </xs:sequence>
       <xs:attribute name="certificationNote" type="xs:string"/>
       <xs:attribute name="description" type="xs:string"/>
@@ -2960,8 +2966,8 @@
    </xs:complexType>
    <xs:complexType name="tagBatchType">
       <xs:sequence>
-         <xs:element name="contents" type="contentListType"/>
          <xs:element name="tags" type="tagListType"/>
+         <xs:element name="contents" type="contentListType"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="tagListType">
@@ -2975,9 +2981,9 @@
    <xs:complexType name="tasSiteOAuthClientListType">
       <xs:sequence>
          <xs:element name="tasSiteOAuthClient"
-                      type="tasSiteOAuthClientType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="tasSiteOAuthClientType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="tasSiteOAuthClientType">
@@ -2987,11 +2993,11 @@
    </xs:complexType>
    <xs:complexType name="taskDataAccelerationType">
       <xs:sequence>
+         <xs:element name="schedule" type="scheduleType" minOccurs="0"/>
          <xs:choice>
             <xs:element name="workbook" type="workbookType"/>
          </xs:choice>
          <xs:element name="lastRunAt" type="xs:dateTime" minOccurs="0"/>
-         <xs:element name="schedule" type="scheduleType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="consecutiveFailedCount" type="xs:nonNegativeInteger"/>
       <xs:attribute name="id" type="xs:string"/>
@@ -2999,12 +3005,12 @@
    </xs:complexType>
    <xs:complexType name="taskExtractRefreshType">
       <xs:sequence>
+         <xs:element name="schedule" type="scheduleType" minOccurs="0"/>
          <xs:choice>
             <xs:element name="datasource" type="dataSourceType"/>
             <xs:element name="view" type="viewType"/>
             <xs:element name="workbook" type="workbookType"/>
          </xs:choice>
-         <xs:element name="schedule" type="scheduleType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="consecutiveFailedCount" type="xs:nonNegativeInteger"/>
       <xs:attribute name="id" type="xs:string"/>
@@ -3019,9 +3025,9 @@
    </xs:complexType>
    <xs:complexType name="taskRunFlowType">
       <xs:sequence>
+         <xs:element name="schedule" type="scheduleType" minOccurs="0"/>
          <xs:element name="flow" type="flowType"/>
          <xs:element name="flowRunSpec" type="flowRunSpecType"/>
-         <xs:element name="schedule" type="scheduleType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="consecutiveFailedCount" type="xs:nonNegativeInteger"/>
       <xs:attribute name="id" type="xs:string"/>
@@ -3050,8 +3056,8 @@
    </xs:complexType>
    <xs:complexType name="updateUploadedFileJobType">
       <xs:sequence>
-         <xs:element name="connectionLuid" type="xs:string"/>
          <xs:element name="datasource" type="dataSourceType"/>
+         <xs:element name="connectionLuid" type="xs:string"/>
          <xs:element name="notes" type="xs:string"/>
       </xs:sequence>
    </xs:complexType>
@@ -3067,9 +3073,9 @@
    <xs:complexType name="userNotificationsPreferenceListType">
       <xs:sequence>
          <xs:element name="userNotificationsPreference"
-                      type="userNotificationsPreferenceType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="userNotificationsPreferenceType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="userNotificationsPreferenceType">
@@ -3116,10 +3122,7 @@
    </xs:complexType>
    <xs:complexType name="viewType">
       <xs:sequence>
-         <xs:element name="dataAccelerationConfig"
-                      type="dataAccelerationInfoType"
-                      minOccurs="0"/>
-         <xs:element name="location" type="locationType" minOccurs="0"/>
+         <xs:element name="workbook" type="workbookType" minOccurs="0"/>
          <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="project" type="projectType" minOccurs="0"/>
          <xs:element name="tags" type="tagListType" minOccurs="0"/>
@@ -3128,7 +3131,10 @@
                <xs:attribute name="totalViewCount" type="xs:nonNegativeInteger" use="required"/>
             </xs:complexType>
          </xs:element>
-         <xs:element name="workbook" type="workbookType" minOccurs="0"/>
+         <xs:element name="dataAccelerationConfig"
+                     type="dataAccelerationInfoType"
+                     minOccurs="0"/>
+         <xs:element name="location" type="locationType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="contentUrl" type="xs:string"/>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
@@ -3144,17 +3150,17 @@
    <xs:complexType name="virtualConnectionConnectionsType">
       <xs:sequence>
          <xs:element name="connection"
-                      type="virtualConnectionSourceConnectionType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="virtualConnectionSourceConnectionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="virtualConnectionListType">
       <xs:sequence>
          <xs:element name="virtualConnection"
-                      type="virtualConnectionType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="virtualConnectionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="virtualConnectionSourceConnectionType">
@@ -3167,10 +3173,10 @@
    </xs:complexType>
    <xs:complexType name="virtualConnectionType">
       <xs:sequence>
-         <xs:element name="content" type="xs:string" minOccurs="0"/>
-         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="project" type="projectType" minOccurs="0"/>
+         <xs:element name="owner" type="userType" minOccurs="0"/>
          <xs:element name="tags" type="tagListType" minOccurs="0"/>
+         <xs:element name="content" type="xs:string" minOccurs="0"/>
          <xs:element name="warnings" type="warningListType" minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="certificationNote" type="xs:string"/>
@@ -3186,9 +3192,9 @@
    <xs:complexType name="warningListType">
       <xs:sequence>
          <xs:element name="warning"
-                      type="warningType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="warningType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="warningType">
@@ -3220,9 +3226,9 @@
    <xs:complexType name="webhookListType">
       <xs:sequence>
          <xs:element name="webhook"
-                      type="webhookType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="webhookType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="webhookSourceEventDatasourceCreatedType"/>
@@ -3245,39 +3251,39 @@
    <xs:complexType name="webhookSourceType">
       <xs:choice>
          <xs:element name="webhook-source-event-datasource-created"
-                      type="webhookSourceEventDatasourceCreatedType"/>
+                     type="webhookSourceEventDatasourceCreatedType"/>
          <xs:element name="webhook-source-event-datasource-deleted"
-                      type="webhookSourceEventDatasourceDeletedType"/>
+                     type="webhookSourceEventDatasourceDeletedType"/>
          <xs:element name="webhook-source-event-datasource-refresh-failed"
-                      type="webhookSourceEventDatasourceRefreshFailedType"/>
+                     type="webhookSourceEventDatasourceRefreshFailedType"/>
          <xs:element name="webhook-source-event-datasource-refresh-started"
-                      type="webhookSourceEventDatasourceRefreshStartedType"/>
+                     type="webhookSourceEventDatasourceRefreshStartedType"/>
          <xs:element name="webhook-source-event-datasource-refresh-succeeded"
-                      type="webhookSourceEventDatasourceRefreshSucceededType"/>
+                     type="webhookSourceEventDatasourceRefreshSucceededType"/>
          <xs:element name="webhook-source-event-datasource-updated"
-                      type="webhookSourceEventDatasourceUpdatedType"/>
+                     type="webhookSourceEventDatasourceUpdatedType"/>
          <xs:element name="webhook-source-event-flow-completed"
-                      type="webhookSourceEventFlowCompletedType"/>
+                     type="webhookSourceEventFlowCompletedType"/>
          <xs:element name="webhook-source-event-label-created"
-                      type="webhookSourceEventLabelCreatedType"/>
+                     type="webhookSourceEventLabelCreatedType"/>
          <xs:element name="webhook-source-event-label-deleted"
-                      type="webhookSourceEventLabelDeletedType"/>
+                     type="webhookSourceEventLabelDeletedType"/>
          <xs:element name="webhook-source-event-label-updated"
-                      type="webhookSourceEventLabelUpdatedType"/>
+                     type="webhookSourceEventLabelUpdatedType"/>
          <xs:element name="webhook-source-event-view-deleted"
-                      type="webhookSourceEventViewDeletedType"/>
+                     type="webhookSourceEventViewDeletedType"/>
          <xs:element name="webhook-source-event-workbook-created"
-                      type="webhookSourceEventWorkbookCreatedType"/>
+                     type="webhookSourceEventWorkbookCreatedType"/>
          <xs:element name="webhook-source-event-workbook-deleted"
-                      type="webhookSourceEventWorkbookDeletedType"/>
+                     type="webhookSourceEventWorkbookDeletedType"/>
          <xs:element name="webhook-source-event-workbook-refresh-failed"
-                      type="webhookSourceEventWorkbookRefreshFailedType"/>
+                     type="webhookSourceEventWorkbookRefreshFailedType"/>
          <xs:element name="webhook-source-event-workbook-refresh-started"
-                      type="webhookSourceEventWorkbookRefreshStartedType"/>
+                     type="webhookSourceEventWorkbookRefreshStartedType"/>
          <xs:element name="webhook-source-event-workbook-refresh-succeeded"
-                      type="webhookSourceEventWorkbookRefreshSucceededType"/>
+                     type="webhookSourceEventWorkbookRefreshSucceededType"/>
          <xs:element name="webhook-source-event-workbook-updated"
-                      type="webhookSourceEventWorkbookUpdatedType"/>
+                     type="webhookSourceEventWorkbookUpdatedType"/>
       </xs:choice>
    </xs:complexType>
    <xs:complexType name="webhookTestResultType">
@@ -3289,9 +3295,9 @@
    </xs:complexType>
    <xs:complexType name="webhookType">
       <xs:sequence minOccurs="0">
-         <xs:element name="owner" type="userType"/>
-         <xs:element name="webhook-destination" type="webhookDestinationType"/>
          <xs:element name="webhook-source" type="webhookSourceType"/>
+         <xs:element name="webhook-destination" type="webhookDestinationType"/>
+         <xs:element name="owner" type="userType"/>
       </xs:sequence>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
       <xs:attribute name="event" type="xs:string"/>
@@ -3304,29 +3310,29 @@
    <xs:complexType name="workbookListType">
       <xs:sequence>
          <xs:element name="workbook"
-                      type="workbookType"
-                      minOccurs="0"
-                      maxOccurs="unbounded"/>
+                     type="workbookType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="workbookType">
       <xs:sequence>
-         <xs:element name="connectionCredentials"
-                      type="connectionCredentialsType"
-                      minOccurs="0"/>
          <xs:element name="connections" type="connectionListType" minOccurs="0"/>
-         <xs:element name="dataAccelerationConfig"
-                      type="dataAccelerationInfoType"
-                      minOccurs="0"/>
-         <xs:element name="dataFreshnessPolicy"
-                      type="dataFreshnessPolicyType"
-                      minOccurs="0"/>
+         <xs:element name="connectionCredentials"
+                     type="connectionCredentialsType"
+                     minOccurs="0"/>
+         <xs:element name="site" type="siteType" minOccurs="0"/>
+         <xs:element name="project" type="projectType" minOccurs="0"/>
          <xs:element name="location" type="locationType" minOccurs="0"/>
          <xs:element name="owner" type="userType" minOccurs="0"/>
-         <xs:element name="project" type="projectType" minOccurs="0"/>
-         <xs:element name="site" type="siteType" minOccurs="0"/>
          <xs:element name="tags" type="tagListType" minOccurs="0"/>
          <xs:element name="views" type="viewListType" minOccurs="0"/>
+         <xs:element name="dataAccelerationConfig"
+                     type="dataAccelerationInfoType"
+                     minOccurs="0"/>
+         <xs:element name="dataFreshnessPolicy"
+                     type="dataFreshnessPolicyType"
+                     minOccurs="0"/>
       </xs:sequence>
       <xs:attribute name="contentUrl" type="xs:string"/>
       <xs:attribute name="createdAt" type="xs:dateTime"/>
