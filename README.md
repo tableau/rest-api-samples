@@ -4,6 +4,12 @@
 
 This repository contains Python and Java samples for the Tableau REST API, as well as [Postman collections](https://www.postman.com/) that can be called against the REST API. For instructions on running the samples, see the Readme files in each directory.
 
+Pulse Scripts
+-------------
+The [pulse](pulse/) directory contains Python CLI tools for managing Tableau Pulse:
+- [bulk-followers](pulse/bulk-followers/) - Bulk add or remove followers from Pulse metrics
+- [user-preferences](pulse/user-preferences/) - Manage Pulse user notification preferences (cadence, channels, grouping)
+
 Other references
 - [Developer docs for the REST API](http://onlinehelp.tableau.com/current/api/rest_api/en-us/help.htm).
 - [Tableau python library for the REST API](https://github.com/tableau/server-client-python) (includes samples showing how to use the library)
