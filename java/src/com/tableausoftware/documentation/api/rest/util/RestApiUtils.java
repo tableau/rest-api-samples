@@ -22,7 +22,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import com.google.common.io.Files;
@@ -155,7 +156,7 @@ public class RestApiUtils {
 
     private final String TABLEAU_PAYLOAD_NAME = "request_payload";
 
-    private Logger m_logger = Logger.getLogger(RestApiUtils.class);
+    private Logger m_logger = LogManager.getLogger(RestApiUtils.class);
 
     private ObjectFactory m_objectFactory = new ObjectFactory();
 
