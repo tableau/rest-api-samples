@@ -1,0 +1,325 @@
+openapi: 3.0.0
+info:
+  title: Salesforce LLM Open Connector API
+  description: "This Beta API spec enables Tableau customers and partners to connect their LLM gateways to Tableau Agent."
+  version: "v1"
+  termsOfService: ""
+  contact:
+    name: Einstein Foundations
+    url: https://www.salesforce.com/artificial-intelligence/
+  license:
+    name: MIT
+    url: https://github.com/salesforce/generic-llm-connector-openapi/blob/master/LICENSE
+servers:
+  - url: https://bring-your-own-llm.example.com
+
+paths:
+
+  /chat/completions:
+    post:
+      operationId: createChatCompletion
+      summary: Create chat response
+      description: Creates a model response for the given chat conversation.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateChatCompletionRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateChatCompletionResponse"
+
+  /embeddings:
+    post:
+      operationId: createEmbedding
+      summary: Create embedding vector
+      description: Creates an embedding vector representing the input text.
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEmbeddingRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEmbeddingResponse"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api-key
+      description: "API key required to access the API, passed in the header."
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: false
+        param:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: false
+      required:
+        - type
+        - message
+        - param
+        - code
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          $ref: "#/components/schemas/Error"
+      required:
+        - error
+
+    CompletionUsage:
+      type: object
+      description: Usage statistics for the completion request.
+      properties:
+        completion_tokens:
+          type: integer
+          description: Number of tokens in the generated completion.
+        prompt_tokens:
+          type: integer
+          description: Number of tokens in the prompt.
+        total_tokens:
+          type: integer
+          description: Total number of tokens used in the request (prompt + completion).
+      required:
+        - prompt_tokens
+        - completion_tokens
+        - total_tokens
+
+    CreateChatCompletionRequest:
+      type: object
+      properties:
+        messages:
+          description: A list of messages comprising the conversation so far.
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/ChatCompletionRequestMessage"
+        model:
+          description: ID of the model to use.
+          example: "gpt-4-turbo"
+          type: string
+        max_tokens:
+          description: |
+            The maximum number of [tokens](/tokenizer) that can be generated in the chat completion.
+
+            The total length of input tokens and generated tokens is limited by the model's context length.
+          type: integer
+          nullable: true
+        n:
+          type: integer
+          minimum: 1
+          maximum: 128
+          default: 1
+          example: 1
+          nullable: true
+          description: How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
+        temperature:
+          type: number
+          minimum: 0
+          maximum: 2
+          default: 1
+          example: 1
+          nullable: true
+          description: What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.
+        parameters:
+          description: "Dictionary of any other parameters that are required by the provider. Values are passed as is to the provider so that the request can include parameters that are unique to a provider."
+          type: object
+          additionalProperties: true
+          example: { "top_p": 0.5 }
+      required:
+        - model
+        - messages
+
+    CreateChatCompletionResponse:
+      type: object
+      description: Represents a chat completion response returned by model, based on the provided input.
+      properties:
+        id:
+          type: string
+          description: A unique identifier for the chat completion.
+        choices:
+          type: array
+          description: A list of chat completion choices. Can be more than one if `n` is greater than 1.
+          items:
+            type: object
+            required:
+              - finish_reason
+              - index
+              - message
+            properties:
+              finish_reason:
+                type: string
+                description: &chat_completion_finish_reason_description |
+                  The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+                  `length` if the maximum number of tokens specified in the request was reached,
+                  `content_filter` if content was omitted due to a flag from our content filters,
+                  `tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function.
+                enum:
+                  [
+                    "stop",
+                    "length",
+                    "tool_calls",
+                    "content_filter",
+                    "function_call",
+                  ]
+              index:
+                type: integer
+                description: The index of the choice in the list of choices.
+              message:
+                $ref: "#/components/schemas/ChatCompletionResponseMessage"
+        created:
+          type: integer
+          description: The Unix timestamp (in seconds) of when the chat completion was created. Model endpoints that pass timestamps in milliseconds must be converted to seconds.
+        model:
+          type: string
+          description: The model used for the chat completion.
+        object:
+          type: string
+          description: The object type, which is always `chat.completion`.
+          enum: [chat.completion]
+        usage:
+          $ref: "#/components/schemas/CompletionUsage"
+      required:
+        - choices
+        - created
+        - id
+        - model
+        - object
+
+    ChatCompletionRequestMessage:
+      type: object
+      title: Chat Completion Message
+      properties:
+        content:
+          description: The contents of the message.
+          type: string
+        role:
+          type: string
+          enum: ["system", "user", "assistant"]
+          description: The role of the messages author.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
+      required:
+        - content
+        - role
+
+    ChatCompletionResponseMessage:
+      type: object
+      title: A chat completion message generated by the model.
+      properties:
+        content:
+          type: string
+          description: The contents of the message.
+          nullable: true
+        role:
+          type: string
+          enum: ["assistant"]
+          description: The role of the author of this message.
+      required:
+        - role
+        - content
+
+    CreateEmbeddingRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        input:
+          description: Input text to embed, encoded as a string.
+          type: array
+          minItems: 1
+          maxItems: 2048
+          items:
+            type: string
+        model:
+          description: The model used for generating the embedding.
+          type: string
+      required:
+        - model
+        - input
+
+    CreateEmbeddingResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          description: The list of embeddings generated by the model.
+          items:
+            $ref: "#/components/schemas/Embedding"
+        model:
+          type: string
+          description: The name of the model used to generate the embedding.
+        object:
+          type: string
+          description: The object type, which is always "list".
+          enum:
+            - list
+        usage:
+          type: object
+          description: The usage information for the request.
+          properties:
+            prompt_tokens:
+              type: integer
+              description: The number of tokens used by the prompt.
+            total_tokens:
+              type: integer
+              description: The total number of tokens used by the request.
+          required:
+            - prompt_tokens
+            - total_tokens
+      required:
+        - object
+        - model
+        - data
+        - usage
+
+    Embedding:
+      type: object
+      description: Represents an embedding vector returned by embedding endpoint.
+      properties:
+        index:
+          type: integer
+          description: The index of the embedding in the list of embeddings.
+        embedding:
+          type: array
+          description: >
+            The embedding vector, which is a list of floats. The length of vector depends on the model.
+          items:
+            type: number
+            format: float
+        object:
+          type: string
+          description: The object type, which is always "embedding".
+          enum:
+            - embedding
+      required:
+        - index
+        - object
+        - embedding
