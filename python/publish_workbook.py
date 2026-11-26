@@ -36,8 +36,8 @@ import getpass
 
 # The following packages are used to build a multi-part/mixed request.
 # They are contained in the 'requests' library
-from requests.packages.urllib3.fields import RequestField
-from requests.packages.urllib3.filepost import encode_multipart_formdata
+from urllib3.fields import RequestField
+from urllib3.filepost import encode_multipart_formdata
 
 # The namespace for the REST API is 'http://tableausoftware.com/api' for Tableau Server 9.0
 # or 'http://tableau.com/api' for Tableau Server 9.1 or later
